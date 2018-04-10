@@ -20,17 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "LottoWindow.h"
-#include "ui_LottoWindow.h"
+#include "PowerballReader.h"
 
-LottoWindow::LottoWindow(QWidget *parent) :
-	QDialog(parent),
-	ui(new Ui::LottoWindow)
+PowerballReader::PowerballReader()
 {
-	ui->setupUi(this);
+
 }
 
-LottoWindow::~LottoWindow()
+PowerballReader::~PowerballReader()
 {
-	delete ui;
+
 }

@@ -1,3 +1,6 @@
+#ifndef DRAWREADER_H
+#define DRAWREADER_H
+
 // MIT License
 //
 // Copyright (c) 2018 Michael Simpson
@@ -20,17 +23,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "LottoWindow.h"
-#include "ui_LottoWindow.h"
+#include "Draw.h"
 
-LottoWindow::LottoWindow(QWidget *parent) :
-	QDialog(parent),
-	ui(new Ui::LottoWindow)
+enum SourceType
 {
-	ui->setupUi(this);
-}
+	eFile,
+	eDownload
+};
 
-LottoWindow::~LottoWindow()
+class DrawReader
 {
-	delete ui;
-}
+public:
+	DrawReader();
+	virtual ~DrawReader();
+
+	virtual QString name(void) = 0;
+	virtual SourceType sourceType(void) = 0;
+	virtual bool open(void) = 0;
+	virtual bool getNextDraw(Draw& draw) = 0;
+	virtual void close(void) = 0;
+};
+
+#endif // DRAWREADER_H

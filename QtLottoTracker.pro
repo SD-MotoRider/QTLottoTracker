@@ -15,12 +15,21 @@ TEMPLATE = app
 SOURCES += \
     main.cpp \
     LottoWindow.cpp \
-    LottoTracker.cpp
+    LottoTracker.cpp \
+    DrawReader.cpp \
+    PowerballReader.cpp
 
 HEADERS  += \
     LottoWindow.h \
     LottoTracker.h \
-    Draw.h
+    Draw.h \
+    DrawReader.h \
+    PowerballReader.h
 
 FORMS    += \
     LottoWindow.ui
+
+DISTFILES += \
+    README.md \
+    .gitignore \
+    LICENSE
