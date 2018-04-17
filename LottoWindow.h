@@ -25,6 +25,8 @@
 
 #include <QDialog>
 
+#include "DrawReader.h"
+
 namespace Ui {
 class LottoWindow;
 }
@@ -38,7 +40,11 @@ public:
 	~LottoWindow();
 
 private:
-	Ui::LottoWindow *ui;
+    void initialize(void);
+
+    Ui::LottoWindow*            _ui;
+
+    DrawReaders                 _drawReaders;
 };
 
 #endif // LOTTOWINDOW_H

@@ -23,14 +23,24 @@
 #include "LottoWindow.h"
 #include "ui_LottoWindow.h"
 
-LottoWindow::LottoWindow(QWidget *parent) :
+#include "PowerballReader.h"
+
+LottoWindow::LottoWindow
+(
+    QWidget* parent
+) :
 	QDialog(parent),
-	ui(new Ui::LottoWindow)
+    _ui(new Ui::LottoWindow)
 {
-	ui->setupUi(this);
+    _ui->setupUi(this);
 }
 
 LottoWindow::~LottoWindow()
 {
-	delete ui;
+    delete _ui;
+}
+
+void LottoWindow::initialize()
+{
+    _drawReaders.push_back(new PowerballReader);
 }

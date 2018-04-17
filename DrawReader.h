@@ -25,6 +25,8 @@
 
 #include "Draw.h"
 
+#include <QList>
+
 enum SourceType
 {
 	eFile,
@@ -34,14 +36,13 @@ enum SourceType
 class DrawReader
 {
 public:
-	DrawReader();
-	virtual ~DrawReader();
-
 	virtual QString name(void) = 0;
 	virtual SourceType sourceType(void) = 0;
 	virtual bool open(void) = 0;
 	virtual bool getNextDraw(Draw& draw) = 0;
 	virtual void close(void) = 0;
 };
+
+typedef QList<DrawReader*> DrawReaders;
 
 #endif // DRAWREADER_H

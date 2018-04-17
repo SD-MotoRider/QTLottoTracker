@@ -22,12 +22,43 @@
 
 #include "PowerballReader.h"
 
+#include <QtNetwork>
+
 PowerballReader::PowerballReader()
 {
 
 }
 
 PowerballReader::~PowerballReader()
+{
+
+}
+
+QString PowerballReader::name()
+{
+    return "Powerball";
+}
+
+SourceType PowerballReader::sourceType()
+{
+    return SourceType::eDownload;
+}
+
+bool PowerballReader::open()
+{
+    bool result(false);
+
+    return result;
+}
+
+bool PowerballReader::getNextDraw(Draw& draw)
+{
+    bool result(false);
+
+    return result;
+}
+
+void PowerballReader::close()
 {
 
 }
