@@ -22,6 +22,7 @@
 
 #include "PowerballReader.h"
 
+#include <QCryptographicHash>
 #include <QtNetwork>
 
 PowerballReader::PowerballReader()
@@ -34,6 +35,23 @@ PowerballReader::~PowerballReader()
 
 }
 
+quint32 PowerballReader::id()
+{
+    static quint32 sId(0);
+
+    if (sId == 0)
+    {
+        QCryptographicHash hash(QCryptographicHash::Md5);
+
+        hash.addData(name().toLatin1());
+        QByteArray result = hash.result().toHex();
+        result = result.left(8);
+        sId = result.toLong(Q_NULLPTR, 16);
+    }
+
+    return sId;
+}
+
 QString PowerballReader::name()
 {
     return "Powerball";
@@ -44,21 +62,26 @@ SourceType PowerballReader::sourceType()
     return SourceType::eDownload;
 }
 
-bool PowerballReader::open()
+bool PowerballReader::update()
 {
     bool result(false);
 
     return result;
 }
 
-bool PowerballReader::getNextDraw(Draw& draw)
+QStringList PowerballReader::drawHeadings()
+{
+    static QStringList headings;
+
+    if (headings.isEmpty())
+        headings << "Draw Date" << "Ball 1" << "Ball 2" << "Ball 3" << "Ball 4" << "Ball 5" << "Powerball";
+
+    return headings;
+}
+
+bool PowerballReader::getNextDraw(QStringList& data)
 {
     bool result(false);
 
     return result;
-}
-
-void PowerballReader::close()
-{
-
 }

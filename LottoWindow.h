@@ -23,9 +23,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <QDialog>
-
 #include "DrawReader.h"
+
+#include <QDialog>
 
 namespace Ui {
 class LottoWindow;
@@ -36,8 +36,11 @@ class LottoWindow : public QDialog
 	Q_OBJECT
 
 public:
-	explicit LottoWindow(QWidget *parent = 0);
+    explicit LottoWindow(QWidget* parent = Q_NULLPTR);
 	~LottoWindow();
+
+protected slots:
+    void on__gamesCombo_currentIndexChanged(const QString &text);
 
 private:
     void initialize(void);

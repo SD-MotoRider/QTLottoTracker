@@ -36,11 +36,13 @@ enum SourceType
 class DrawReader
 {
 public:
+    virtual quint32 id(void) = 0;
 	virtual QString name(void) = 0;
 	virtual SourceType sourceType(void) = 0;
-	virtual bool open(void) = 0;
-	virtual bool getNextDraw(Draw& draw) = 0;
-	virtual void close(void) = 0;
+    virtual bool update(void) = 0;
+
+    virtual QStringList drawHeadings(void) = 0;
+    virtual bool getNextDraw(QStringList& data) = 0;
 };
 
 typedef QList<DrawReader*> DrawReaders;

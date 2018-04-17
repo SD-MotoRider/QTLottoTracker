@@ -24,13 +24,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="comboBox">
-       <item>
-        <property name="text">
-         <string>Powerball</string>
-        </property>
-       </item>
-      </widget>
+      <widget class="QComboBox" name="_gamesCombo"/>
      </item>
      <item>
       <spacer name="horizontalSpacer">
@@ -48,7 +42,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QTableWidget" name="tableWidget">
+    <widget class="QTableWidget" name="_drawTable">
      <column>
       <property name="text">
        <string>Draw Date</string>

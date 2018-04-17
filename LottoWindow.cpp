@@ -33,6 +33,8 @@ LottoWindow::LottoWindow
     _ui(new Ui::LottoWindow)
 {
     _ui->setupUi(this);
+
+    initialize();
 }
 
 LottoWindow::~LottoWindow()
@@ -43,4 +45,35 @@ LottoWindow::~LottoWindow()
 void LottoWindow::initialize()
 {
     _drawReaders.push_back(new PowerballReader);
+
+    _ui->_gamesCombo->blockSignals(true);
+
+    auto drawReader = _drawReaders.begin();
+    while (drawReader != _drawReaders.end())
+    {
+        _ui->_gamesCombo->addItem((*drawReader)->name(), (*drawReader)->id());
+        drawReader++;
+    }
+
+    _ui->_gamesCombo->blockSignals(false);
+
+    on__gamesCombo_currentIndexChanged(_ui->_gamesCombo->currentText());
+}
+
+void LottoWindow::on__gamesCombo_currentIndexChanged
+(
+    const QString& text
+)
+{
+    auto drawReader = _drawReaders.begin();
+    while (drawReader != _drawReaders.end())
+    {
+        if ((*drawReader)->name() == text)
+        {
+            _ui->_drawTable->clear();
+            _ui->_drawTable->setHorizontalHeaderLabels((*drawReader)->drawHeadings());
+            break;
+        }
+        drawReader++;
+    }
 }
