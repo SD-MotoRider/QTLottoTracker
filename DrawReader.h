@@ -26,6 +26,7 @@
 #include "Draw.h"
 
 #include <QList>
+#include <QObject>
 
 enum SourceType
 {
@@ -33,8 +34,11 @@ enum SourceType
 	eDownload
 };
 
-class DrawReader
+class DrawReader :
+	public QObject
 {
+Q_OBJECT
+
 public:
     virtual quint32 id(void) = 0;
 	virtual QString name(void) = 0;
@@ -43,6 +47,9 @@ public:
 
     virtual QStringList drawHeadings(void) = 0;
     virtual bool getNextDraw(QStringList& data) = 0;
+
+protected:
+	Draws						_draws;
 };
 
 typedef QList<DrawReader*> DrawReaders;

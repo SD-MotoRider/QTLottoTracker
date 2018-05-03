@@ -25,9 +25,13 @@
 
 #include "DrawReader.h"
 
+class QNetworkReply;
+
 class PowerballReader :
 	public DrawReader
 {
+Q_OBJECT
+
 public:
 	PowerballReader();
 	virtual ~PowerballReader();
@@ -39,6 +43,13 @@ public:
 
     virtual QStringList drawHeadings(void);
     virtual bool getNextDraw(QStringList& data);
+
+private slots:
+	void replyFinished(QNetworkReply* networkReply);
+
+private:
+	bool						_networkActive;
+	QByteArray					_drawData;
 };
 
 #endif // DRAWREADER_H

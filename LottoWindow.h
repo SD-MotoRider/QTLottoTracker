@@ -41,6 +41,7 @@ public:
 
 protected slots:
     void on__gamesCombo_currentIndexChanged(const QString &text);
+	void on__gameAction_triggered();
 
 private:
     void initialize(void);
@@ -48,6 +49,7 @@ private:
     Ui::LottoWindow*            _ui;
 
     DrawReaders                 _drawReaders;
+	DrawReader*					_currentDrawReader;
 };
 
 #endif // LOTTOWINDOW_H

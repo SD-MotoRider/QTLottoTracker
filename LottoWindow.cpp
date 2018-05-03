@@ -70,10 +70,27 @@ void LottoWindow::on__gamesCombo_currentIndexChanged
     {
         if ((*drawReader)->name() == text)
         {
+			_currentDrawReader = *drawReader;
+			switch (_currentDrawReader->sourceType())
+			{
+			case eFile:
+				_ui->_gameAction->setText("Open File");
+				break;
+
+			case eDownload:
+				_ui->_gameAction->setText("Download");
+				break;
+			}
+
             _ui->_drawTable->clear();
-            _ui->_drawTable->setHorizontalHeaderLabels((*drawReader)->drawHeadings());
+			_ui->_drawTable->setHorizontalHeaderLabels(_currentDrawReader->drawHeadings());
             break;
         }
         drawReader++;
     }
+}
+
+void LottoWindow::on__gameAction_triggered()
+{
+
 }

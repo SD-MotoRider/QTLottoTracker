@@ -25,7 +25,8 @@
 #include <QCryptographicHash>
 #include <QtNetwork>
 
-PowerballReader::PowerballReader()
+PowerballReader::PowerballReader() :
+	_networkActive(false)
 {
 
 }
@@ -65,6 +66,29 @@ SourceType PowerballReader::sourceType()
 bool PowerballReader::update()
 {
     bool result(false);
+	int count(0);
+
+	_networkActive = true;
+
+	QNetworkAccessManager* manager = new QNetworkAccessManager(this);
+	connect(manager, &QNetworkAccessManager::finished, this, &PowerballReader::replyFinished);
+
+	manager->get(QNetworkRequest(QUrl("http://www.calottery.com/sitecore/content/Miscellaneous/download-numbers/?GameName=powerball&Order=No")));
+
+	while (_networkActive == true && count < 10)
+	{
+		QThread::sleep(1);
+		count++;
+	}
+
+	if (_networkActive == false)
+	{
+		result = false;
+	}
+	else
+	{
+
+	}
 
     return result;
 }
@@ -83,5 +107,16 @@ bool PowerballReader::getNextDraw(QStringList& data)
 {
     bool result(false);
 
+
+
     return result;
+}
+
+void PowerballReader::replyFinished
+(
+	QNetworkReply* networkReply
+)
+{
+	_drawData = networkReply->readAll();
+	networkReply->deleteLater();
 }
