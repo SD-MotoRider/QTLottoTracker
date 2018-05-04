@@ -41,7 +41,7 @@ public:
 
 protected slots:
     void on__gamesCombo_currentIndexChanged(const QString &text);
-	void on__gameAction_triggered();
+	void on__gameAction_released();
 
 private:
     void initialize(void);

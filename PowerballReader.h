@@ -25,7 +25,8 @@
 
 #include "DrawReader.h"
 
-class QNetworkReply;
+#include <QNetworkReply>
+#include <QSslError>
 
 class PowerballReader :
 	public DrawReader
@@ -46,6 +47,9 @@ public:
 
 private slots:
 	void replyFinished(QNetworkReply* networkReply);
+	void on_readyRead();
+	void on_error(QNetworkReply::NetworkError networkError);
+	void on_sslErrors(QList<QSslError>);
 
 private:
 	bool						_networkActive;

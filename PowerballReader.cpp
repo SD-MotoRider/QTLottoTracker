@@ -73,7 +73,13 @@ bool PowerballReader::update()
 	QNetworkAccessManager* manager = new QNetworkAccessManager(this);
 	connect(manager, &QNetworkAccessManager::finished, this, &PowerballReader::replyFinished);
 
-	manager->get(QNetworkRequest(QUrl("http://www.calottery.com/sitecore/content/Miscellaneous/download-numbers/?GameName=powerball&Order=No")));
+	QNetworkReply* networkReply =
+		manager->get(QNetworkRequest(QUrl("http://www.calottery.com/sitecore/content/Miscellaneous/download-numbers/?GameName=powerball&Order=No")));
+
+	connect(networkReply, SIGNAL(QNetworkReply::readyRead()), this, SLOT(PowerballReader::on_readyRead()));
+	connect(networkReply, SIGNAL(QNetworkReply::error(QNetworkReply::NetworkError)), this, SLOT(PowerballReader::on_error(QNetworkReply::NetworkError)));
+	connect(networkReply, SIGNAL(QNetworkReply::sslErrors(QList<QSslError> sslErrors)),
+			this, SLOT(PowerballReader::on_sslErrors(QList<QSslError> sslErrors)));
 
 	while (_networkActive == true && count < 10)
 	{
@@ -87,7 +93,9 @@ bool PowerballReader::update()
 	}
 	else
 	{
-
+		QNetworkReply::NetworkError error = networkReply->error();
+		int i = 0;
+		i++;
 	}
 
     return result;
@@ -119,4 +127,35 @@ void PowerballReader::replyFinished
 {
 	_drawData = networkReply->readAll();
 	networkReply->deleteLater();
+}
+
+
+void PowerballReader::on_readyRead()
+{
+	bool dataReady = true;
+	int i(0);
+
+	i++;
+}
+
+void PowerballReader::on_error
+(
+	QNetworkReply::NetworkError networkError
+)
+{
+	bool dataReady = true;
+	int i(0);
+
+	i++;
+}
+
+void PowerballReader:: on_sslErrors
+(
+	QList<QSslError> sslErrors
+)
+{
+	bool dataReady = true;
+	int i(0);
+
+	i++;
 }

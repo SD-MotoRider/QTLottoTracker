@@ -90,7 +90,11 @@ void LottoWindow::on__gamesCombo_currentIndexChanged
     }
 }
 
-void LottoWindow::on__gameAction_triggered()
+void LottoWindow::on__gameAction_released()
 {
+	bool updated = _currentDrawReader->update();
+	if (updated == true)
+	{
 
+	}
 }
