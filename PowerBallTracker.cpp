@@ -20,14 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "LottoTracker.h"
+#include "PowerBallTracker.h"
 
-LottoTracker::LottoTracker()
+PowerBallTracker::PowerBallTracker()
 {
 
 }
 
-void LottoTracker::getDrawFrequencyChart
+void PowerBallTracker::getDrawFrequencyChart
 (
 	FrequencyCounts& frequencyCounts
 )
@@ -57,7 +57,7 @@ void LottoTracker::getDrawFrequencyChart
 	}
 }
 
-void LottoTracker::getPowerballFrequencyChart
+void PowerBallTracker::getPowerballFrequencyChart
 (
 	FrequencyCounts& frequencyCounts
 )

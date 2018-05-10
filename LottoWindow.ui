@@ -17,19 +17,9 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QLabel" name="label">
+      <widget class="QPushButton" name="_updateDrawData">
        <property name="text">
-        <string>Game:</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QComboBox" name="_gamesCombo"/>
-     </item>
-     <item>
-      <widget class="QPushButton" name="_gameAction">
-       <property name="text">
-        <string>PushButton</string>
+        <string>Update Draw Data</string>
        </property>
       </widget>
      </item>

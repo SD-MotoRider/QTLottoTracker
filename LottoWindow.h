@@ -23,33 +23,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "DrawReader.h"
+#include "PowerballReader.h"
 
 #include <QDialog>
 
-namespace Ui {
-class LottoWindow;
-}
 
-class LottoWindow : public QDialog
+#include "ui_LottoWindow.h"
+
+class LottoWindow :
+	public QDialog,
+	Ui::LottoWindow
 {
 	Q_OBJECT
 
 public:
-    explicit LottoWindow(QWidget* parent = Q_NULLPTR);
+	explicit LottoWindow(QWidget* parent = Q_NULLPTR);
 	~LottoWindow();
 
 protected slots:
-    void on__gamesCombo_currentIndexChanged(const QString &text);
-	void on__gameAction_released();
+	void on__updateDrawData_released();
 
 private:
-    void initialize(void);
-
-    Ui::LottoWindow*            _ui;
-
-    DrawReaders                 _drawReaders;
-	DrawReader*					_currentDrawReader;
+	PowerballReader             _drawReader;
 };
 
 #endif // LOTTOWINDOW_H

@@ -1,5 +1,5 @@
-#ifndef LOTTOTRACKER_H
-#define LOTTOTRACKER_H
+#ifndef POWERBALLTRACKER_H
+#define POWERBALLTRACKER_H
 
 // MIT License
 //
@@ -28,10 +28,10 @@
 typedef std::map<int, int> DrawNumberCounts;
 typedef std::multimap<int, int> FrequencyCounts;
 
-class LottoTracker
+class PowerBallTracker
 {
 public:
-	LottoTracker();
+	PowerBallTracker();
 
 	void addDraw(const Draw& draw)
 	{

@@ -23,13 +23,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "DrawReader.h"
+#include "Draw.h"
+
+#include <QList>
+#include <QObject>
+
+enum SourceType
+{
+	eFile,
+	eDownload
+};
+
 
 #include <QNetworkReply>
 #include <QSslError>
 
 class PowerballReader :
-	public DrawReader
+	public QObject
 {
 Q_OBJECT
 
@@ -37,13 +47,13 @@ public:
 	PowerballReader();
 	virtual ~PowerballReader();
 
-    virtual quint32 id(void);
+	virtual quint32 id(void);
 	virtual QString name(void);
 	virtual SourceType sourceType(void);
-    virtual bool update(void);
+	virtual bool update(void);
 
-    virtual QStringList drawHeadings(void);
-    virtual bool getNextDraw(QStringList& data);
+	virtual QStringList drawHeadings(void);
+	virtual bool getNextDraw(QStringList& data);
 
 private slots:
 	void replyFinished(QNetworkReply* networkReply);
@@ -54,6 +64,7 @@ private slots:
 private:
 	bool						_networkActive;
 	QByteArray					_drawData;
+	Draws						_draws;
 };
 
 #endif // DRAWREADER_H
