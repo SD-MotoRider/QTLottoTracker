@@ -1,6 +1,3 @@
-#ifndef DRAWREADER_H
-#define DRAWREADER_H
-
 // MIT License
 //
 // Copyright (c) 2018 Michael Simpson
@@ -23,35 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "Draw.h"
+#include "LottoWindow.h"
 
-#include <QList>
-#include <QObject>
+#include "PowerballReader.h"
 
-enum SourceType
+LottoWindow::LottoWindow
+(
+	QWidget* parent
+) :
+	QDialog(parent)
 {
-	eFile,
-	eDownload
-};
+	setupUi(this);
 
-class DrawReader :
-	public QObject
+}
+
+LottoWindow::~LottoWindow()
 {
-Q_OBJECT
+}
 
-public:
-    virtual quint32 id(void) = 0;
-	virtual QString name(void) = 0;
-	virtual SourceType sourceType(void) = 0;
-    virtual bool update(void) = 0;
 
-    virtual QStringList drawHeadings(void) = 0;
-    virtual bool getNextDraw(QStringList& data) = 0;
+void LottoWindow::on__updateDrawData_released()
+{
+	bool updated = _drawReader.update();
+	if (updated == true)
+	{
 
-protected:
-	Draws						_draws;
-};
-
-typedef QList<DrawReader*> DrawReaders;
-
-#endif // DRAWREADER_H
+	}
+}
