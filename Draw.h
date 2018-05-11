@@ -32,8 +32,9 @@
 class Draw
 {
 public:
-	Draw(const QDate& drawDate, const std::vector<int>& numbers, int powerball)
+	Draw(int drawNumber, const QDate& drawDate, const std::vector<int>& numbers, int powerball)
 	{
+		_drawNumber = drawNumber;
 		_drawDate = drawDate;
 		_numbers = numbers;
 		_powerball = powerball;
@@ -42,13 +43,14 @@ public:
 
 	Draw(const Draw& copyMe)
 	{
+		_drawNumber = copyMe._drawNumber;
 		_drawDate = copyMe._drawDate;
 		_numbers = copyMe._numbers;
 		_powerball = copyMe._powerball;
 		std::sort(_numbers.begin(), _numbers.end());
 	}
 
-
+	int							_drawNumber;
 	QDate						_drawDate;
 	std::vector<int>			_numbers;
 	int							_powerball;

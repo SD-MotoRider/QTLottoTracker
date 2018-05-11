@@ -34,7 +34,7 @@ enum SourceType
 	eDownload
 };
 
-
+#include <QtNetwork>
 #include <QNetworkReply>
 #include <QSslError>
 
@@ -52,17 +52,23 @@ public:
 	virtual SourceType sourceType(void);
 	virtual bool update(void);
 
-	virtual QStringList drawHeadings(void);
 	virtual bool getNextDraw(QStringList& data);
 
 private slots:
-	void replyFinished(QNetworkReply* networkReply);
+	void on_authenticationRequired(QNetworkReply* reply, QAuthenticator* authenticator);
+	void on_encrypted(QNetworkReply* reply);
+	void on_finished(QNetworkReply* reply);
+	void on_networkAccessibleChanged(QNetworkAccessManager::NetworkAccessibility accessible);
+	void on_proxyAuthenticationRequired(const QNetworkProxy& proxy, QAuthenticator* authenticator);
+	void on_sslErrors(QNetworkReply* reply, const QList<QSslError> & errors);
+
 	void on_readyRead();
 	void on_error(QNetworkReply::NetworkError networkError);
 	void on_sslErrors(QList<QSslError>);
 
 private:
-	bool						_networkActive;
+	QNetworkAccessManager*		_networkAccessManager;
+	QNetworkReply*				_networkReply;
 	QByteArray					_drawData;
 	Draws						_draws;
 };
