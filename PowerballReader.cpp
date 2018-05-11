@@ -77,27 +77,14 @@ SourceType PowerballReader::sourceType()
 
 bool PowerballReader::update()
 {
-    bool result(false);
-	int count(0);
+	bool result(false);
 
 	if (_networkAccessManager != Q_NULLPTR)
 	{
 		_networkReply = _networkAccessManager->get(
 			QNetworkRequest(
 				QUrl("http://www.calottery.com/sitecore/content/Miscellaneous/download-numbers/?GameName=powerball&Order=No")));
-
-		connect(_networkReply, SIGNAL(QNetworkReply::readyRead()), this, SLOT(PowerballReader::on_readyRead()));
-		connect(_networkReply, SIGNAL(QNetworkReply::error(QNetworkReply::NetworkError)), this, SLOT(PowerballReader::on_error(QNetworkReply::NetworkError)));
-		connect(_networkReply, SIGNAL(sslErrors(QList<QSslError> sslErrors)),
-				this, SLOT(PowerballReader::on_sslErrors(QList<QSslError> sslErrors)));
 	}
-    return result;
-}
-
-bool PowerballReader::getNextDraw(QStringList& data)
-{
-    bool result(false);
-
     return result;
 }
 
@@ -106,6 +93,8 @@ void PowerballReader::on_finished
 	QNetworkReply* networkReply
 )
 {
+	_tracker.reset();
+
 	_drawData = networkReply->readAll();
 	networkReply->deleteLater();
 	_networkReply = Q_NULLPTR;
@@ -114,48 +103,54 @@ void PowerballReader::on_finished
 	auto line = lines.begin();
 	while (line != lines.end())
 	{
-		char aChar = (*line).at(0);
-		if (aChar >= '0' && aChar <= '9')
+		if (line->isEmpty() == false)
 		{
-			QByteArray trimmedLine = (*line).trimmed();
-
-			while (trimmedLine.indexOf("  ") != -1)
-				trimmedLine.replace("  ", " ");
-
-			QByteArrayList iotas = trimmedLine.split(' ');
-			if (iotas.count() >= 11)
+			char aChar = (*line).at(0);
+			if (aChar >= '0' && aChar <= '9')
 			{
-				int drawNumber = iotas.at(0).toInt();
-				QByteArray dateString =
-						iotas.at(1) + " " +
-						iotas.at(2) + " " +
-						iotas.at(3) + " " +
-						iotas.at(4);
+				QByteArray trimmedLine = (*line).trimmed();
 
-				dateString.replace(",", "");
-				dateString.replace(".", "");
+				while (trimmedLine.indexOf("  ") != -1)
+					trimmedLine.replace("  ", " ");
 
-				QDate drawDate = QDate::fromString(QString(dateString), QString("ddd MMM dd yyyy"));
-				std::vector<int> numbers;
-				numbers.push_back(iotas.at(5).toInt());
-				numbers.push_back(iotas.at(6).toInt());
-				numbers.push_back(iotas.at(7).toInt());
-				numbers.push_back(iotas.at(8).toInt());
-				numbers.push_back(iotas.at(9).toInt());
+				QByteArrayList iotas = trimmedLine.split(' ');
+				if (iotas.count() >= 11)
+				{
+					int drawNumber = iotas.at(0).toInt();
+					QByteArray dateString =
+							iotas.at(1) + " " +
+							iotas.at(2) + " " +
+							iotas.at(3) + " " +
+							iotas.at(4);
 
-				int powerBall = iotas.at(10).toInt();
+					dateString.replace(",", "");
+					dateString.replace(".", "");
+
+					QDate drawDate = QDate::fromString(QString(dateString), QString("ddd MMM dd yyyy"));
+					QVector<int> numbers;
+					numbers.push_back(iotas.at(5).toInt());
+					numbers.push_back(iotas.at(6).toInt());
+					numbers.push_back(iotas.at(7).toInt());
+					numbers.push_back(iotas.at(8).toInt());
+					numbers.push_back(iotas.at(9).toInt());
+
+					int powerBall = iotas.at(10).toInt();
+
+					Draw draw(drawNumber, drawDate, numbers, powerBall);
+
+					_tracker.addDraw(draw);
+				}
 			}
 		}
+
 		line++;
 	}
+
+	emit drawFinished();
 }
 
 void PowerballReader::on_readyRead()
 {
-	bool dataReady = true;
-	int i(0);
-
-	i++;
 }
 
 void PowerballReader::on_error
@@ -163,10 +158,7 @@ void PowerballReader::on_error
 	QNetworkReply::NetworkError networkError
 )
 {
-	bool dataReady = true;
-	int i(0);
-
-	i++;
+	Q_UNUSED(networkError);
 }
 
 void PowerballReader::on_sslErrors
@@ -174,32 +166,34 @@ void PowerballReader::on_sslErrors
 	QList<QSslError> sslErrors
 )
 {
-	bool dataReady = true;
-	int i(0);
-
-	i++;
+	Q_UNUSED(sslErrors);
 }
 
 void PowerballReader::on_authenticationRequired(QNetworkReply* reply, QAuthenticator* authenticator)
 {
-
+	Q_UNUSED(reply);
+	Q_UNUSED(authenticator);
 }
 
 void PowerballReader::on_encrypted(QNetworkReply* reply)
 {
-
+	Q_UNUSED(reply);
 }
 
 void PowerballReader::on_networkAccessibleChanged(QNetworkAccessManager::NetworkAccessibility accessible)
 {
 
+	Q_UNUSED(accessible);
 }
 
 void PowerballReader::on_proxyAuthenticationRequired(const QNetworkProxy& proxy, QAuthenticator* authenticator)
 {
+	Q_UNUSED(proxy);
+	Q_UNUSED(authenticator);
 }
 
-void PowerballReader::on_sslErrors(QNetworkReply* reply, const QList<QSslError> & errors)
+void PowerballReader::on_sslErrors(QNetworkReply* reply, const QList<QSslError>& errors)
 {
-
+	Q_UNUSED(reply);
+	Q_UNUSED(errors);
 }

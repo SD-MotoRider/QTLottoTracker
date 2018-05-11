@@ -32,18 +32,29 @@ LottoWindow::LottoWindow
 {
 	setupUi(this);
 
+	connect(&_drawReader, &PowerballReader::drawFinished, this, &LottoWindow::on_drawDataFinished);
+
+	_drawTable->setModel(&(_drawReader._tracker));
 }
 
 LottoWindow::~LottoWindow()
 {
 }
 
-
 void LottoWindow::on__updateDrawData_released()
 {
+	QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
 	bool updated = _drawReader.update();
 	if (updated == true)
 	{
 
 	}
+}
+
+void LottoWindow::on_drawDataFinished()
+{
+	QApplication::restoreOverrideCursor();
+
+	_drawTable->update()
 }

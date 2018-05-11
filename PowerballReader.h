@@ -23,7 +23,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "Draw.h"
+#include "PowerBallTracker.h"
 
 #include <QList>
 #include <QObject>
@@ -52,7 +52,10 @@ public:
 	virtual SourceType sourceType(void);
 	virtual bool update(void);
 
-	virtual bool getNextDraw(QStringList& data);
+	PowerBallTracker _tracker;
+
+signals:
+	void drawFinished(void);
 
 private slots:
 	void on_authenticationRequired(QNetworkReply* reply, QAuthenticator* authenticator);
@@ -70,7 +73,6 @@ private:
 	QNetworkAccessManager*		_networkAccessManager;
 	QNetworkReply*				_networkReply;
 	QByteArray					_drawData;
-	Draws						_draws;
 };
 
 #endif // DRAWREADER_H

@@ -25,14 +25,13 @@
 
 #include <QDate>
 
-#include <list>
-#include <map>
-#include <vector>
+#include <QList>
+#include <QVector>
 
 class Draw
 {
 public:
-	Draw(int drawNumber, const QDate& drawDate, const std::vector<int>& numbers, int powerball)
+	Draw(int drawNumber, const QDate& drawDate, const QVector<int>& numbers, int powerball)
 	{
 		_drawNumber = drawNumber;
 		_drawDate = drawDate;
@@ -52,10 +51,10 @@ public:
 
 	int							_drawNumber;
 	QDate						_drawDate;
-	std::vector<int>			_numbers;
+	QVector<int>				_numbers;
 	int							_powerball;
 };
 
-typedef std::list<Draw> Draws;
+typedef QList<Draw> Draws;
 
 #endif // DRAW_H

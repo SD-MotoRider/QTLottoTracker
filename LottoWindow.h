@@ -42,6 +42,7 @@ public:
 
 protected slots:
 	void on__updateDrawData_released();
+	void on_drawDataFinished(void);
 
 private:
 	PowerballReader             _drawReader;

@@ -22,9 +22,29 @@
 
 #include "PowerBallTracker.h"
 
+const int kDrawNumber(0);
+const int kDrawDate(1);
+const int kBall1(2);
+const int kBall2(3);
+const int kBall3(4);
+const int kBall4(5);
+const int kBall5(6);
+const int kPowerBall(7);
+const int kLastColumn(8);
+
 PowerBallTracker::PowerBallTracker()
 {
 
+}
+
+void PowerBallTracker::addDraw
+(
+	const Draw& draw
+)
+{
+	_draws.push_back(draw);
+
+	emit model
 }
 
 void PowerBallTracker::getDrawFrequencyChart
@@ -80,4 +100,64 @@ void PowerBallTracker::getPowerballFrequencyChart
 		frequencyCounts.insert(std::pair<int, int>(number->second,  number->first));
 		number++;
 	}
+}
+
+int PowerBallTracker::rowCount
+(
+	const QModelIndex& parent //= QModelIndex()
+) const
+{
+	Q_UNUSED(parent);
+
+	return _draws.count();
+}
+
+int PowerBallTracker::columnCount
+(
+	const QModelIndex& parent // = QModelIndex()
+) const
+{
+	Q_UNUSED(parent);
+
+	return kLastColumn;
+}
+
+
+QVariant PowerBallTracker::data
+(
+	const QModelIndex& index,
+	int role //= Qt::DisplayRole
+) const
+{
+	Q_UNUSED(index);
+	Q_UNUSED(role);
+
+	return QVariant();
+}
+
+QVariant PowerBallTracker::headerData
+(
+	int section,
+	Qt::Orientation orientation,
+	int role // = Qt::DisplayRole
+) const
+{
+	Q_UNUSED(orientation);
+	Q_UNUSED(role);
+
+	switch (section)
+	{
+	case kDrawNumber: return QString("Draw Number");
+	case kDrawDate: return QString("Draw Date");
+	case kBall1: return QString("Ball 1");
+	case kBall2: return QString("Ball 2");
+	case kBall3: return QString("Ball 3");
+	case kBall4: return QString("Ball 4");
+	case kBall5: return QString("Ball 5");
+	case kPowerBall: return QString("Powerball");
+	default:
+		break;
+	}
+
+	return QVariant();
 }

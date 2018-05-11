@@ -25,21 +25,37 @@
 
 #include "Draw.h"
 
+// Qt
+#include <QAbstractTableModel>
+
+// c++
+#include <map>
+
 typedef std::map<int, int> DrawNumberCounts;
 typedef std::multimap<int, int> FrequencyCounts;
 
-class PowerBallTracker
+class PowerBallTracker :
+	public QAbstractTableModel
 {
 public:
 	PowerBallTracker();
 
-	void addDraw(const Draw& draw)
+	void reset(void)
 	{
-		_draws.push_back(draw);
+		_draws.clear();
+		_powerball.clear();
+		_numbers.clear();
 	}
+
+	void addDraw(const Draw& draw);
 
 	void getDrawFrequencyChart(FrequencyCounts& frequencyCounts);
 	void getPowerballFrequencyChart(FrequencyCounts& frequencyCounts);
+
+	virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
+	virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
+	virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+	virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
 private:
 	Draws							_draws;
