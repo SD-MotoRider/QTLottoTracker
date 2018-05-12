@@ -30,9 +30,12 @@
 
 // c++
 #include <map>
+#include <utility>
+#include <vector>
 
 typedef std::map<int, int> DrawNumberCounts;
-typedef std::multimap<int, int> FrequencyCounts;
+typedef std::pair<int, int> FrequencyPair;
+typedef std::vector<FrequencyPair> FrequencyCounts;
 
 class PowerBallTracker :
 	public QAbstractTableModel
@@ -49,8 +52,14 @@ public:
 
 	void addDraw(const Draw& draw);
 
+	int getDrawCount(void)
+	{
+		return _draws.count();
+	}
 	void getDrawFrequencyChart(FrequencyCounts& frequencyCounts);
 	void getPowerballFrequencyChart(FrequencyCounts& frequencyCounts);
+
+	void updateModel(void);
 
 	virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
 	virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;

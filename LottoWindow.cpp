@@ -46,7 +46,7 @@ void LottoWindow::on__updateDrawData_released()
 	QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
 	bool updated = _drawReader.update();
-	if (updated == true)
+	if (updated == false)
 	{
 
 	}
@@ -54,7 +54,55 @@ void LottoWindow::on__updateDrawData_released()
 
 void LottoWindow::on_drawDataFinished()
 {
+
+	PowerBallTracker* tracker = &(_drawReader._tracker);
+
+	//tracker->updateModel();
+
+	QTableWidgetItem* twi;
+	int row(0);
+
+	_drawCount->setText(QString::number(tracker->getDrawCount()));
+	FrequencyCounts frequencyCounts;
+
+	tracker->getDrawFrequencyChart(frequencyCounts);
+
+	_ballFreqTable->clearContents();
+	_ballFreqTable->setRowCount(frequencyCounts.size());
+
+	auto frequencyCount = frequencyCounts.begin();
+	while (frequencyCount != frequencyCounts.end())
+	{
+		twi = new QTableWidgetItem(QString::number((*frequencyCount).first));
+		_ballFreqTable->setItem(row, 0, twi);
+
+		twi = new QTableWidgetItem(QString::number((*frequencyCount).second));
+		_ballFreqTable->setItem(row, 1, twi);
+
+		row++;
+		frequencyCount++;
+	}
+
+	tracker->getPowerballFrequencyChart(frequencyCounts);
+
+	row = 0;
+
+	_pBallFreqTable->clearContents();
+	_pBallFreqTable->setRowCount(frequencyCounts.size());
+
+	frequencyCount = frequencyCounts.begin();
+	while (frequencyCount != frequencyCounts.end())
+	{
+		twi = new QTableWidgetItem(QString::number((*frequencyCount).first));
+		_pBallFreqTable->setItem(row, 0, twi);
+
+		twi = new QTableWidgetItem(QString::number((*frequencyCount).second));
+		_pBallFreqTable->setItem(row, 1, twi);
+
+		row++;
+		frequencyCount++;
+	}
+
 	QApplication::restoreOverrideCursor();
 
-	_drawTable->update()
 }

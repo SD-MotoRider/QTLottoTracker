@@ -4,13 +4,12 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT       += core gui network widgets
 
 TARGET = QtLottoTracker
 TEMPLATE = app
 
+CONFIG += c++11
 
 SOURCES += \
 	main.cpp \

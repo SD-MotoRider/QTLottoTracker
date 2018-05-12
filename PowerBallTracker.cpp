@@ -44,7 +44,28 @@ void PowerBallTracker::addDraw
 {
 	_draws.push_back(draw);
 
-	emit model
+	if (_powerball.find(draw._powerball) == _powerball.end())
+		_powerball[draw._powerball] = 1;
+	else
+		_powerball[draw._powerball] = _powerball[draw._powerball] + 1;
+
+	auto number = draw._numbers.begin();
+	while (number != draw._numbers.end())
+	{
+		if (_numbers.find(*number) == _numbers.end())
+			_numbers[*number] = 1;
+		else
+			_numbers[*number] = _numbers[*number] + 1;
+
+		number++;
+	}
+}
+
+void PowerBallTracker::updateModel()
+{
+	beginInsertRows(index(0, 0), 0, _draws.count());
+	insertRows(0, _draws.count());
+	endInsertRows();
 }
 
 void PowerBallTracker::getDrawFrequencyChart
@@ -52,29 +73,20 @@ void PowerBallTracker::getDrawFrequencyChart
 	FrequencyCounts& frequencyCounts
 )
 {
-	if (_numbers.empty())
-	{
-		auto drawIter = _draws.begin();
-		while (drawIter != _draws.end())
-		{
-			auto drawNumberIter = drawIter->_numbers.begin();
-			while (drawNumberIter != drawIter->_numbers.end())
-			{
-				_numbers[*drawNumberIter] = _numbers[*drawNumberIter] + 1;
-				drawNumberIter++;
-			}
-			drawIter++;
-		}
-	}
-
 	frequencyCounts.clear();
 
 	auto number = _numbers.begin();
 	while (number != _numbers.end())
 	{
-		frequencyCounts.insert(std::pair<int, int>(number->second,  number->first));
+		FrequencyPair frequencyPair(number->first, number->second);
+		frequencyCounts.push_back(frequencyPair);
 		number++;
 	}
+
+	std::sort(frequencyCounts.begin(), frequencyCounts.end(), [=](const FrequencyPair& a, const FrequencyPair& b)
+	{
+		return a.second > b.second;
+	});
 }
 
 void PowerBallTracker::getPowerballFrequencyChart
@@ -82,24 +94,20 @@ void PowerBallTracker::getPowerballFrequencyChart
 	FrequencyCounts& frequencyCounts
 )
 {
-	if (_powerball.empty())
-	{
-		auto drawIter = _draws.begin();
-		while (drawIter != _draws.end())
-		{
-			_powerball[drawIter->_powerball] = _powerball[drawIter->_powerball] + 1;
-			drawIter++;
-		}
-	}
-
 	frequencyCounts.clear();
 
 	auto number = _powerball.begin();
 	while (number != _powerball.end())
 	{
-		frequencyCounts.insert(std::pair<int, int>(number->second,  number->first));
+		FrequencyPair frequencyPair(number->first, number->second);
+		frequencyCounts.push_back(frequencyPair);
 		number++;
 	}
+
+	std::sort(frequencyCounts.begin(), frequencyCounts.end(), [=](const FrequencyPair& a, const FrequencyPair& b)
+	{
+		return a.second > b.second;
+	});
 }
 
 int PowerBallTracker::rowCount
@@ -132,6 +140,25 @@ QVariant PowerBallTracker::data
 	Q_UNUSED(index);
 	Q_UNUSED(role);
 
+	if (role == Qt::DisplayRole)
+	{
+		int row = index.row();
+		int section = index.column();
+
+		switch (section)
+		{
+		case kDrawNumber: return QString("%1").arg(_draws.at(row)._drawNumber);
+		case kDrawDate: return _draws.at(row)._drawDate.toString();
+		case kBall1: return QString("Ball 1");
+		case kBall2: return QString("Ball 2");
+		case kBall3: return QString("Ball 3");
+		case kBall4: return QString("Ball 4");
+		case kBall5: return QString("Ball 5");
+		case kPowerBall: return QString("Powerball");
+		default:
+			break;
+		}
+	}
 	return QVariant();
 }
 
