@@ -15,16 +15,19 @@ SOURCES += \
 	main.cpp \
 	LottoWindow.cpp \
 	PowerballReader.cpp \
-	PowerBallTracker.cpp
+	PowerBallTracker.cpp \
+    QuickPickDialog.cpp
 
 HEADERS  += \
 	LottoWindow.h \
 	Draw.h \
 	PowerballReader.h \
-	PowerBallTracker.h
+	PowerBallTracker.h \
+    QuickPickDialog.h
 
 FORMS    += \
-	LottoWindow.ui
+	LottoWindow.ui \
+    QuickPickDialog.ui
 
 DISTFILES += \
 	README.md \

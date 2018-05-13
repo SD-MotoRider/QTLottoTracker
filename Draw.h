@@ -31,6 +31,12 @@
 class Draw
 {
 public:
+	Draw()
+	{
+		_drawNumber = 0;
+		_drawDate = QDate::currentDate();
+	}
+
 	Draw(int drawNumber, const QDate& drawDate, const QVector<int>& numbers, int powerball)
 	{
 		_drawNumber = drawNumber;

@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 #include "LottoWindow.h"
+#include "QuickPickDialog.h"
 
 #include "PowerballReader.h"
 
@@ -32,9 +33,11 @@ LottoWindow::LottoWindow
 {
 	setupUi(this);
 
+	setSizeGripEnabled(true);
+
 	connect(&_drawReader, &PowerballReader::drawFinished, this, &LottoWindow::on_drawDataFinished);
 
-	_drawTable->setModel(&(_drawReader._tracker));
+//	_drawTable->setModel(&(_drawReader._tracker));
 }
 
 LottoWindow::~LottoWindow()
@@ -45,11 +48,52 @@ void LottoWindow::on__updateDrawData_released()
 {
 	QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
-	bool updated = _drawReader.update();
-	if (updated == false)
-	{
+	_drawReader.update();
+}
 
-	}
+void LottoWindow::on__genQuickPick_released()
+{
+	Draws draws;
+	Draw draw;
+
+	PowerBallTracker* tracker = &(_drawReader._tracker);
+
+	tracker->generateADraw(draw);
+	draws.push_back(draw);
+
+	tracker->generateADraw(draw);
+	draws.push_back(draw);
+
+	tracker->generateADraw(draw);
+	draws.push_back(draw);
+
+	tracker->generateADraw(draw);
+	draws.push_back(draw);
+
+	tracker->generateADraw(draw);
+	draws.push_back(draw);
+
+	tracker->generateADraw(draw);
+	draws.push_back(draw);
+
+	tracker->generateADraw(draw);
+	draws.push_back(draw);
+
+	tracker->generateADraw(draw);
+	draws.push_back(draw);
+
+	tracker->generateADraw(draw);
+	draws.push_back(draw);
+
+	tracker->generateADraw(draw);
+	draws.push_back(draw);
+
+	QuickPickDialog quickPickDialog(this);
+
+	quickPickDialog.addDraws(draws);
+
+	quickPickDialog.exec();
+
 }
 
 void LottoWindow::on_drawDataFinished()
@@ -59,16 +103,69 @@ void LottoWindow::on_drawDataFinished()
 
 	//tracker->updateModel();
 
+	const int precision(2);
 	QTableWidgetItem* twi;
 	int row(0);
 
-	_drawCount->setText(QString::number(tracker->getDrawCount()));
+	int drawCount = tracker->getDrawCount();
+	if (drawCount == 0)
+		return;
+
+	_drawTable->clearContents();
+	_drawTable->setRowCount(drawCount);
+
+	for (int index(0); index < drawCount; index++)
+	{
+		Draw draw;
+
+		if (tracker->getDraw(index, draw) == true)
+		{
+			QTableWidgetItem* twi;
+
+			twi = new QTableWidgetItem(QString::number(draw._drawNumber));
+			_drawTable->setItem(row, 0, twi);
+
+			twi = new QTableWidgetItem(draw._drawDate.toString());
+			_drawTable->setItem(row, 1, twi);
+
+			twi = new QTableWidgetItem(QString::number(draw._numbers.at(0)));
+			_drawTable->setItem(row, 2, twi);
+
+			twi = new QTableWidgetItem(QString::number(draw._numbers.at(1)));
+			_drawTable->setItem(row, 3, twi);
+
+			twi = new QTableWidgetItem(QString::number(draw._numbers.at(2)));
+			_drawTable->setItem(row, 4, twi);
+
+			twi = new QTableWidgetItem(QString::number(draw._numbers.at(3)));
+			_drawTable->setItem(row, 5, twi);
+
+			twi = new QTableWidgetItem(QString::number(draw._numbers.at(4)));
+			_drawTable->setItem(row, 6, twi);
+
+			twi = new QTableWidgetItem(QString::number(draw._powerball));
+			twi->setTextColor(Qt::red);
+			_drawTable->setItem(row, 7, twi);
+
+			row++;
+		}
+	}
+
+	_drawCount->setText(QString::number(drawCount));
 	FrequencyCounts frequencyCounts;
 
 	tracker->getDrawFrequencyChart(frequencyCounts);
 
 	_ballFreqTable->clearContents();
 	_ballFreqTable->setRowCount(frequencyCounts.size());
+
+	qreal totalProbability(0);
+
+	totalProbability = 5.0 / (qreal) frequencyCounts.size() * 100.0;
+
+	_numberProbability->setText(QString::number(totalProbability, 'f', precision) + "%");
+
+	row = 0;
 
 	auto frequencyCount = frequencyCounts.begin();
 	while (frequencyCount != frequencyCounts.end())
@@ -78,6 +175,10 @@ void LottoWindow::on_drawDataFinished()
 
 		twi = new QTableWidgetItem(QString::number((*frequencyCount).second));
 		_ballFreqTable->setItem(row, 1, twi);
+
+		totalProbability = ((qreal) (*frequencyCount).second / (qreal) drawCount) * 100.0;
+		twi = new QTableWidgetItem(QString::number(totalProbability, 'f', precision) + "%");
+		_ballFreqTable->setItem(row, 2, twi);
 
 		row++;
 		frequencyCount++;
@@ -90,6 +191,12 @@ void LottoWindow::on_drawDataFinished()
 	_pBallFreqTable->clearContents();
 	_pBallFreqTable->setRowCount(frequencyCounts.size());
 
+	totalProbability = 0;
+
+	totalProbability = (1.0 / (qreal) frequencyCounts.size()) * 100.0;
+
+	_pBallProbability->setText(QString::number(totalProbability, 'f', precision) + "%");
+
 	frequencyCount = frequencyCounts.begin();
 	while (frequencyCount != frequencyCounts.end())
 	{
@@ -98,6 +205,10 @@ void LottoWindow::on_drawDataFinished()
 
 		twi = new QTableWidgetItem(QString::number((*frequencyCount).second));
 		_pBallFreqTable->setItem(row, 1, twi);
+
+		totalProbability = ((qreal) (*frequencyCount).second / (qreal) drawCount) * 100.0;
+		twi = new QTableWidgetItem(QString::number(totalProbability, 'f', precision) + "%");
+		_pBallFreqTable->setItem(row, 2, twi);
 
 		row++;
 		frequencyCount++;

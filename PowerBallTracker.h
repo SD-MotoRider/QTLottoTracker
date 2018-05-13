@@ -46,7 +46,7 @@ public:
 	void reset(void)
 	{
 		_draws.clear();
-		_powerball.clear();
+		_powerballs.clear();
 		_numbers.clear();
 	}
 
@@ -56,8 +56,13 @@ public:
 	{
 		return _draws.count();
 	}
+
+	bool getDraw(int index, Draw& draw);
+
 	void getDrawFrequencyChart(FrequencyCounts& frequencyCounts);
 	void getPowerballFrequencyChart(FrequencyCounts& frequencyCounts);
+
+	void generateADraw(Draw& draw);
 
 	void updateModel(void);
 
@@ -68,7 +73,7 @@ public:
 
 private:
 	Draws							_draws;
-	DrawNumberCounts				_powerball;
+	DrawNumberCounts				_powerballs;
 	DrawNumberCounts				_numbers;
 };
 

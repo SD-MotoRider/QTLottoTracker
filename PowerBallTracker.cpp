@@ -22,6 +22,9 @@
 
 #include "PowerBallTracker.h"
 
+#include <QRandomGenerator>
+#include <QSet>
+
 const int kDrawNumber(0);
 const int kDrawDate(1);
 const int kBall1(2);
@@ -44,10 +47,10 @@ void PowerBallTracker::addDraw
 {
 	_draws.push_back(draw);
 
-	if (_powerball.find(draw._powerball) == _powerball.end())
-		_powerball[draw._powerball] = 1;
+	if (_powerballs.find(draw._powerball) == _powerballs.end())
+		_powerballs[draw._powerball] = 1;
 	else
-		_powerball[draw._powerball] = _powerball[draw._powerball] + 1;
+		_powerballs[draw._powerball] = _powerballs[draw._powerball] + 1;
 
 	auto number = draw._numbers.begin();
 	while (number != draw._numbers.end())
@@ -66,6 +69,23 @@ void PowerBallTracker::updateModel()
 	beginInsertRows(index(0, 0), 0, _draws.count());
 	insertRows(0, _draws.count());
 	endInsertRows();
+}
+
+bool PowerBallTracker::getDraw
+(
+	int index,
+	Draw& draw
+)
+{
+	bool result(false);
+
+	if (index < _draws.count())
+	{
+		draw = _draws.at(index);
+		result = true;
+	}
+
+	return result;
 }
 
 void PowerBallTracker::getDrawFrequencyChart
@@ -96,8 +116,8 @@ void PowerBallTracker::getPowerballFrequencyChart
 {
 	frequencyCounts.clear();
 
-	auto number = _powerball.begin();
-	while (number != _powerball.end())
+	auto number = _powerballs.begin();
+	while (number != _powerballs.end())
 	{
 		FrequencyPair frequencyPair(number->first, number->second);
 		frequencyCounts.push_back(frequencyPair);
@@ -108,6 +128,64 @@ void PowerBallTracker::getPowerballFrequencyChart
 	{
 		return a.second > b.second;
 	});
+}
+
+#include <algorithm>    // std::shuffle
+#include <random>       // std::default_random_engine
+#include <chrono>       // std::chrono::system_clock
+
+void PowerBallTracker::generateADraw(Draw& draw)
+{
+	static QVector<int> balls;
+	static QVector<int> powerballs;
+
+	if (balls.isEmpty())
+	{
+		unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+
+		auto number = _numbers.begin();
+		while (number != _numbers.end())
+		{
+			for (int i = 0; i < number->second; i++)
+				balls.push_back(number->first);
+
+			number++;
+		}
+
+
+		shuffle (balls.begin(), balls.end(), std::default_random_engine(seed));
+	}
+
+	if (powerballs.isEmpty())
+	{
+		unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+
+		auto number = _powerballs.begin();
+		while (number != _powerballs.end())
+		{
+			for (int i = 0; i < number->second; i++)
+				powerballs.push_back(number->first);
+
+			number++;
+		}
+
+		shuffle (powerballs.begin(), powerballs.end(), std::default_random_engine(seed));
+	}
+
+	QSet<int> ballSet;
+
+	while (ballSet.count() < 5)
+	{
+		int ball = balls.at(QRandomGenerator::system()->bounded(balls.count()));
+		if (ballSet.contains(ball) == false)
+			ballSet.insert(ball);
+	}
+
+	draw._drawDate = QDate::currentDate();
+	draw._drawNumber = 0;
+	draw._numbers = ballSet.toList().toVector();
+	std::sort(draw._numbers.begin() , draw._numbers.end());
+	draw._powerball = powerballs.at(QRandomGenerator::system()->bounded(powerballs.count()));
 }
 
 int PowerBallTracker::rowCount

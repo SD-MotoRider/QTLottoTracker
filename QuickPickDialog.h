@@ -1,5 +1,5 @@
-#ifndef LOTTOWINDOW_H
-#define LOTTOWINDOW_H
+#ifndef QUICKPICKDIALOG_H
+#define QUICKPICKDIALOG_H
 
 // MIT License
 //
@@ -23,30 +23,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "PowerballReader.h"
+#include "Draw.h"
 
-#include <QDialog>
+#include "ui_QuickPickDialog.h"
 
-
-#include "ui_LottoWindow.h"
-
-class LottoWindow :
+class QuickPickDialog :
 	public QDialog,
-	Ui::LottoWindow
+	private Ui::QuickPickDialog
 {
 	Q_OBJECT
 
 public:
-	explicit LottoWindow(QWidget* parent = Q_NULLPTR);
-	~LottoWindow();
+	QuickPickDialog(QWidget* parent = Q_NULLPTR);
 
-protected slots:
-	void on__genQuickPick_released();
-	void on__updateDrawData_released();
-	void on_drawDataFinished(void);
-
-private:
-	PowerballReader             _drawReader;
+	void addDraws(Draws draws);
 };
 
-#endif // LOTTOWINDOW_H
+#endif // QUICKPICKDIALOG_H

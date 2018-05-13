@@ -1,6 +1,3 @@
-#ifndef LOTTOWINDOW_H
-#define LOTTOWINDOW_H
-
 // MIT License
 //
 // Copyright (c) 2018 Michael Simpson
@@ -23,30 +20,52 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "PowerballReader.h"
+#include "QuickPickDialog.h"
 
-#include <QDialog>
-
-
-#include "ui_LottoWindow.h"
-
-class LottoWindow :
-	public QDialog,
-	Ui::LottoWindow
+QuickPickDialog::QuickPickDialog
+(
+	QWidget* parent
+) :
+	QDialog(parent)
 {
-	Q_OBJECT
+	setupUi(this);
+}
 
-public:
-	explicit LottoWindow(QWidget* parent = Q_NULLPTR);
-	~LottoWindow();
+void QuickPickDialog::addDraws
+(
+	Draws draws
+)
+{
+	int row(0);
 
-protected slots:
-	void on__genQuickPick_released();
-	void on__updateDrawData_released();
-	void on_drawDataFinished(void);
+	_quickPicks->clearContents();
+	_quickPicks->setRowCount(draws.count());
 
-private:
-	PowerballReader             _drawReader;
-};
+	QTableWidgetItem* twi;
 
-#endif // LOTTOWINDOW_H
+	auto draw = draws.begin();
+	while (draw != draws.end())
+	{
+		twi = new QTableWidgetItem(QString::number(draw->_numbers.at(0)));
+		_quickPicks->setItem(row, 0, twi);
+
+		twi = new QTableWidgetItem(QString::number(draw->_numbers.at(1)));
+		_quickPicks->setItem(row, 1, twi);
+
+		twi = new QTableWidgetItem(QString::number(draw->_numbers.at(2)));
+		_quickPicks->setItem(row, 2, twi);
+
+		twi = new QTableWidgetItem(QString::number(draw->_numbers.at(3)));
+		_quickPicks->setItem(row, 3, twi);
+
+		twi = new QTableWidgetItem(QString::number(draw->_numbers.at(4)));
+		_quickPicks->setItem(row, 4, twi);
+
+		twi = new QTableWidgetItem(QString::number(draw->_powerball));
+		twi->setTextColor(Qt::red);
+		_quickPicks->setItem(row, 5, twi);
+
+		row++;
+		draw++;
+	}
+}
