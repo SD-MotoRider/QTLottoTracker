@@ -27,7 +27,6 @@
 
 #include <QDialog>
 
-
 #include "ui_LottoWindow.h"
 
 class LottoWindow :

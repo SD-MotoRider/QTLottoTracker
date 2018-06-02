@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "LottoWindow.h"
+#include "LottoWidget.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])

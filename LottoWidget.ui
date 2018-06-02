@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>LottoWindow</class>
- <widget class="QDialog" name="LottoWindow">
+ <class>LottoWidget</class>
+ <widget class="QWidget" name="LottoWidget">
+  <property name="enabled">
+   <bool>false</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>923</width>
-    <height>734</height>
+    <width>1079</width>
+    <height>770</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -22,10 +25,19 @@
   <property name="windowTitle">
    <string>Powerball</string>
   </property>
-  <property name="sizeGripEnabled">
-   <bool>true</bool>
+  <property name="windowOpacity">
+   <double>6.000000000000000</double>
+  </property>
+  <property name="sizeGripEnabled" stdset="0">
+   <bool>false</bool>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_3">
+   <property name="leftMargin">
+    <number>17</number>
+   </property>
+   <property name="rightMargin">
+    <number>12</number>
+   </property>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
@@ -111,6 +123,9 @@
    </item>
    <item>
     <widget class="QTableWidget" name="_drawTable">
+     <property name="columnCount">
+      <number>10</number>
+     </property>
      <attribute name="horizontalHeaderDefaultSectionSize">
       <number>112</number>
      </attribute>
@@ -160,6 +175,8 @@
        <string>Powerball</string>
       </property>
      </column>
+     <column/>
+     <column/>
     </widget>
    </item>
    <item>

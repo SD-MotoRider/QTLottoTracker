@@ -20,7 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "LottoWindow.h"
+#include "LottoWidget.h"
+#include "PreferencesDialog.h"
 #include "QuickPickDialog.h"
 
 #include "PowerballReader.h"
@@ -37,7 +38,7 @@ LottoWindow::LottoWindow
 
 	connect(&_drawReader, &PowerballReader::drawFinished, this, &LottoWindow::on_drawDataFinished);
 
-//	_drawTable->setModel(&(_drawReader._tracker));
+
 }
 
 LottoWindow::~LottoWindow()

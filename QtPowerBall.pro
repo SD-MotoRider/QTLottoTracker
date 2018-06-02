@@ -17,21 +17,24 @@ CONFIG += c++11
 
 SOURCES += \
 	main.cpp \
-	LottoWindow.cpp \
 	PowerballReader.cpp \
 	PowerBallTracker.cpp \
-	QuickPickDialog.cpp
+	QuickPickDialog.cpp \
+    PreferencesDialog.cpp \
+    LottoWidget.cpp
 
 HEADERS  += \
-	LottoWindow.h \
 	Draw.h \
 	PowerballReader.h \
 	PowerBallTracker.h \
-	QuickPickDialog.h
+	QuickPickDialog.h \
+    PreferencesDialog.h \
+    LottoWidget.h
 
 FORMS    += \
-	LottoWindow.ui \
-	QuickPickDialog.ui
+	QuickPickDialog.ui \
+    PreferencesDialog.ui \
+    LottoWidget.ui
 
 DISTFILES += \
 	README.md \
