@@ -22,6 +22,10 @@
 
 #include "QuickPickDialog.h"
 
+#include <QPainter>
+#include <QPrinter>
+#include <QPrintDialog>
+
 QuickPickDialog::QuickPickDialog
 (
 	QWidget* parent
@@ -29,6 +33,10 @@ QuickPickDialog::QuickPickDialog
 	QDialog(parent)
 {
 	setupUi(this);
+
+	QAction* printAction = new QAction("Print", this);
+	connect(printAction, &QAction::triggered, this, &QuickPickDialog::print);
+	this->addAction(printAction);
 }
 
 void QuickPickDialog::addDraws
@@ -67,5 +75,37 @@ void QuickPickDialog::addDraws
 
 		row++;
 		draw++;
+	}
+}
+
+void QuickPickDialog::print
+(
+	bool checked
+)
+{
+	Q_UNUSED(checked);
+
+	QPrinter printer;
+	printer.setPageOrientation(QPageLayout::Landscape);
+
+	QPrintDialog dialog(&printer, this);
+	dialog.setWindowTitle(tr("Print Document"));
+
+	if (dialog.exec() == QDialog::Accepted)
+	{
+		QPainter painter;
+
+		painter.begin(&printer);
+
+		double xscale = printer.pageRect().width()/double(_quickPicks->width());
+		xscale -= .10;
+		double yscale = printer.pageRect().height()/double(_quickPicks->height());
+		double scale = qMin(xscale, yscale);
+		painter.translate(printer.paperRect().x() + printer.pageRect().width()/2,
+						   printer.paperRect().y() + printer.pageRect().height()/2);
+		painter.scale(scale, scale);
+		painter.translate(-width()/2, -height()/2);
+
+		_quickPicks->render(&painter);
 	}
 }

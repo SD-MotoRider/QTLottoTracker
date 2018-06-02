@@ -37,6 +37,9 @@ public:
 	QuickPickDialog(QWidget* parent = Q_NULLPTR);
 
 	void addDraws(Draws draws);
+
+private slots:
+	void print(bool checked);
 };
 
 #endif // QUICKPICKDIALOG_H

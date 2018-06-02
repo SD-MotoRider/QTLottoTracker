@@ -4,9 +4,13 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network widgets
+QT += core
+QT += gui
+QT += network
+QT += widgets
+QT += printsupport
 
-TARGET = QtLottoTracker
+TARGET = PowerBall
 TEMPLATE = app
 
 CONFIG += c++11
@@ -16,18 +20,18 @@ SOURCES += \
 	LottoWindow.cpp \
 	PowerballReader.cpp \
 	PowerBallTracker.cpp \
-    QuickPickDialog.cpp
+	QuickPickDialog.cpp
 
 HEADERS  += \
 	LottoWindow.h \
 	Draw.h \
 	PowerballReader.h \
 	PowerBallTracker.h \
-    QuickPickDialog.h
+	QuickPickDialog.h
 
 FORMS    += \
 	LottoWindow.ui \
-    QuickPickDialog.ui
+	QuickPickDialog.ui
 
 DISTFILES += \
 	README.md \
