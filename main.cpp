@@ -20,14 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "LottoWidget.h"
+#include "PowerBallWindow.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
 
-	LottoWindow w;
+	PowerBallWindow w;
 	w.show();
 
 	return a.exec();

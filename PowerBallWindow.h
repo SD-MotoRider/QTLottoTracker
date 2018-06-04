@@ -1,6 +1,5 @@
-#ifndef LOTTOWINDOW_H
-#define LOTTOWINDOW_H
-
+#ifndef POWERBALLWINDOW_H
+#define POWERBALLWINDOW_H
 // MIT License
 //
 // Copyright (c) 2018 Michael Simpson
@@ -23,29 +22,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "PowerballReader.h"
 
-#include <QWidget>
+#include <QMainWindow>
 
-#include "ui_LottoWidget.h"
+#include "ui_PowerBallWindow.h"
 
-class LottoWidget :
-	public QWidget,
-	Ui::LottoWidget
+class PowerBallWindow :
+	public QMainWindow,
+	private Ui::PowerBallWindow
 {
-	Q_OBJECT
+Q_OBJECT
 
 public:
-	explicit LottoWidget(QWidget* parent = Q_NULLPTR);
-	~LottoWidget();
+	explicit PowerBallWindow();
 
-protected slots:
-	void on__genQuickPick_released();
-	void on__updateDrawData_released();
-	void on_drawDataFinished(void);
+signals:
+
+public slots:
 
 private:
-	PowerballReader             _drawReader;
 };
 
-#endif // LOTTOWINDOW_H
+#endif // POWERBALLWINDOW_H

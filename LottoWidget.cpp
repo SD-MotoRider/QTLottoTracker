@@ -26,33 +26,29 @@
 
 #include "PowerballReader.h"
 
-LottoWindow::LottoWindow
+LottoWidget::LottoWidget
 (
 	QWidget* parent
 ) :
-	QDialog(parent)
+	QWidget(parent)
 {
 	setupUi(this);
 
-	setSizeGripEnabled(true);
-
-	connect(&_drawReader, &PowerballReader::drawFinished, this, &LottoWindow::on_drawDataFinished);
-
-
+	connect(&_drawReader, &PowerballReader::drawFinished, this, &LottoWidget::on_drawDataFinished);
 }
 
-LottoWindow::~LottoWindow()
+LottoWidget::~LottoWidget()
 {
 }
 
-void LottoWindow::on__updateDrawData_released()
+void LottoWidget::on__updateDrawData_released()
 {
 	QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
 	_drawReader.update();
 }
 
-void LottoWindow::on__genQuickPick_released()
+void LottoWidget::on__genQuickPick_released()
 {
 	Draws draws;
 	Draw draw;
@@ -97,7 +93,7 @@ void LottoWindow::on__genQuickPick_released()
 
 }
 
-void LottoWindow::on_drawDataFinished()
+void LottoWidget::on_drawDataFinished()
 {
 
 	PowerBallTracker* tracker = &(_drawReader._tracker);

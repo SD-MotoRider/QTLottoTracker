@@ -21,7 +21,8 @@ SOURCES += \
 	PowerBallTracker.cpp \
 	QuickPickDialog.cpp \
     PreferencesDialog.cpp \
-    LottoWidget.cpp
+    LottoWidget.cpp \
+    PowerBallWindow.cpp
 
 HEADERS  += \
 	Draw.h \
@@ -29,12 +30,14 @@ HEADERS  += \
 	PowerBallTracker.h \
 	QuickPickDialog.h \
     PreferencesDialog.h \
-    LottoWidget.h
+    LottoWidget.h \
+    PowerBallWindow.h
 
 FORMS    += \
 	QuickPickDialog.ui \
     PreferencesDialog.ui \
-    LottoWidget.ui
+    LottoWidget.ui \
+    PowerBallWindow.ui
 
 DISTFILES += \
 	README.md \
