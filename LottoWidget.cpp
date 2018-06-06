@@ -154,7 +154,7 @@ void LottoWidget::on_drawDataFinished()
 	tracker->getDrawFrequencyChart(frequencyCounts);
 
 	_ballFreqTable->clearContents();
-	_ballFreqTable->setRowCount(frequencyCounts.size());
+    _ballFreqTable->setRowCount((int) frequencyCounts.size());
 
 	qreal totalProbability(0);
 
@@ -186,7 +186,7 @@ void LottoWidget::on_drawDataFinished()
 	row = 0;
 
 	_pBallFreqTable->clearContents();
-	_pBallFreqTable->setRowCount(frequencyCounts.size());
+    _pBallFreqTable->setRowCount((int) frequencyCounts.size());
 
 	totalProbability = 0;
 

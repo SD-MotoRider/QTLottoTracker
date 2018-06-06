@@ -39,7 +39,7 @@ public:
 	explicit LottoWidget(QWidget* parent = Q_NULLPTR);
 	~LottoWidget();
 
-protected slots:
+public slots:
 	void on__genQuickPick_released();
 	void on__updateDrawData_released();
 	void on_drawDataFinished(void);

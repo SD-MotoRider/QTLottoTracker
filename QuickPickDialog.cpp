@@ -22,6 +22,7 @@
 
 #include "QuickPickDialog.h"
 
+#include <QAction>
 #include <QPainter>
 #include <QPrinter>
 #include <QPrintDialog>

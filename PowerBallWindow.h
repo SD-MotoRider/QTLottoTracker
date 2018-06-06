@@ -38,7 +38,9 @@ public:
 
 signals:
 
-public slots:
+protected slots:
+	void onUpdateDataTriggered(bool checked = false);
+	void on_actionPreferences_triggered(bool checked = false);
 
 private:
 };
