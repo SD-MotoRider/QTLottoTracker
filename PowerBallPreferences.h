@@ -34,6 +34,11 @@ public:
 	bool pickNumbersThatExceedProbability(void);
 	bool limitPicksToTimeSpan(void);
 	quint32 timeSpanInWeeks(void);
+
+private:
+	bool				_exceedProb;
+	bool				_limitPicks;
+	quint32				_limitSpan;
 };
 
 #endif // POWERBALLPREFERENCES_H

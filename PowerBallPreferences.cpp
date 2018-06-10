@@ -31,12 +31,41 @@ const QString kTimeSpamLimit("LimitInWeeks");
 
 PowerBallPreferences::PowerBallPreferences()
 {
-
+	_exceedProb = pickNumbersThatExceedProbability();
+	_limitPicks =limitPicksToTimeSpan();
+	_limitSpan = timeSpanInWeeks();
 }
 
 bool PowerBallPreferences::preferencesAreDirty()
 {
-	return false;
+	bool result(true);
+
+	bool exceedProb;
+	bool limitPicks;
+	quint32 limitSpan;
+
+	exceedProb = pickNumbersThatExceedProbability();
+	if (exceedProb == _exceedProb)
+	{
+		limitPicks = limitPicksToTimeSpan();
+		if (limitPicks == _limitPicks)
+		{
+			limitSpan = timeSpanInWeeks();
+			if (limitSpan == _limitSpan)
+			{
+				result = false;
+			}
+		}
+	}
+
+	if (result == true)
+	{
+		_exceedProb = exceedProb;
+		_limitPicks = limitPicks;
+		_limitSpan = limitSpan;
+	}
+
+	return result;
 }
 
 bool PowerBallPreferences::pickNumbersThatExceedProbability()

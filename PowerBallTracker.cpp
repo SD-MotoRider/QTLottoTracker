@@ -141,12 +141,13 @@ void PowerBallTracker::generateADraw(Draw& draw)
 	static QVector<int> balls;
 	static QVector<int> powerballs;
 
-	if (_preferencesUpdated)
+	if (_preferences.preferencesAreDirty() == true)
 	{
 		balls.clear();
 		powerballs.clear();
 	}
 
+	bool limitProbability = _preferences.pickNumbersThatExceedProbability();
 	if (balls.isEmpty())
 	{
 		unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();

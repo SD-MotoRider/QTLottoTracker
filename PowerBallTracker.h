@@ -24,6 +24,7 @@
 // SOFTWARE.
 
 #include "Draw.h"
+#include "PowerBallPreferences.h"
 
 // Qt
 #include <QAbstractTableModel>
@@ -42,11 +43,6 @@ class PowerBallTracker :
 {
 public:
 	PowerBallTracker();
-
-	void preferencesUpdated()
-	{
-		_preferencesUpdated = true;
-	}
 
 	void reset(void)
 	{
@@ -77,7 +73,7 @@ public:
 	virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
 private:
-	bool							_preferencesUpdated;
+	PowerBallPreferences			_preferences;
 	Draws							_draws;
 	DrawNumberCounts				_powerballs;
 	DrawNumberCounts				_numbers;
