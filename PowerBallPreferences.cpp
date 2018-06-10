@@ -20,19 +20,63 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "PowerBallWindow.h"
-#include <QApplication>
+#include "PowerBallPreferences.h"
 
-int main(int argc, char *argv[])
+#include <QSettings>
+
+const QString kGroupName("Preferences");
+const QString kExceedsProbability("ExceedsProbability");
+const QString kLimitToTimeSpan("LimitToTimeSpane");
+const QString kTimeSpamLimit("LimitInWeeks");
+
+PowerBallPreferences::PowerBallPreferences()
 {
-	QApplication a(argc, argv);
 
-	a.setApplicationName("QtPowerBall");
-	a.setOrganizationName("Simpson");
-	a.setOrganizationDomain("");
+}
 
-	PowerBallWindow w;
-	w.show();
+bool PowerBallPreferences::preferencesAreDirty()
+{
+	return false;
+}
 
-	return a.exec();
+bool PowerBallPreferences::pickNumbersThatExceedProbability()
+{
+	bool result;
+
+	QSettings settings;
+
+	settings.beginGroup(kGroupName);
+
+	result = settings.value(kExceedsProbability, false).toBool();
+	settings.endGroup();
+
+	return result;
+}
+
+bool PowerBallPreferences::limitPicksToTimeSpan()
+{
+	bool result;
+
+	QSettings settings;
+
+	settings.beginGroup(kGroupName);
+
+	result = settings.value(kLimitToTimeSpan, false).toBool();
+	settings.endGroup();
+
+	return result;
+}
+
+quint32 PowerBallPreferences::timeSpanInWeeks()
+{
+	quint32 result;
+
+	QSettings settings;
+
+	settings.beginGroup(kGroupName);
+
+	result = settings.value(kTimeSpamLimit, 24).toInt();
+	settings.endGroup();
+
+	return result;
 }

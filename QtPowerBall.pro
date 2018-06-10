@@ -22,7 +22,8 @@ SOURCES += \
 	QuickPickDialog.cpp \
     PreferencesDialog.cpp \
     LottoWidget.cpp \
-    PowerBallWindow.cpp
+    PowerBallWindow.cpp \
+    PowerBallPreferences.cpp
 
 HEADERS  += \
 	Draw.h \
@@ -31,7 +32,8 @@ HEADERS  += \
 	QuickPickDialog.h \
     PreferencesDialog.h \
     LottoWidget.h \
-    PowerBallWindow.h
+    PowerBallWindow.h \
+    PowerBallPreferences.h
 
 FORMS    += \
 	QuickPickDialog.ui \

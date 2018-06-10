@@ -40,6 +40,5 @@ void PowerBallWindow::on_actionPreferences_triggered
 
 	if (preferencesDialog.exec() == QDialog::Accepted)
 	{
-
 	}
 }

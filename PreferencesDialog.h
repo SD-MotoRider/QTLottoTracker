@@ -10,7 +10,13 @@ class PreferencesDialog :
 Q_OBJECT
 
 public:
-	explicit PreferencesDialog(QWidget* parent = Q_NULLPTR);
+	PreferencesDialog(QWidget* parent = Q_NULLPTR);
+
+private:
+	void updateSpinText();
+
+private slots:
+	void on__weekSpanSpinBox_valueChanged(int newValue);
 };
 
 #endif // PREFERENCESDIALOG_H

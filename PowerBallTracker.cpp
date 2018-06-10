@@ -22,6 +22,8 @@
 
 #include "PowerBallTracker.h"
 
+#include "PowerBallPreferences.h"
+
 #include <QRandomGenerator>
 #include <QSet>
 
@@ -138,6 +140,12 @@ void PowerBallTracker::generateADraw(Draw& draw)
 {
 	static QVector<int> balls;
 	static QVector<int> powerballs;
+
+	if (_preferencesUpdated)
+	{
+		balls.clear();
+		powerballs.clear();
+	}
 
 	if (balls.isEmpty())
 	{

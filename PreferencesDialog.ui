@@ -71,7 +71,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="label">
+           <widget class="QLabel" name="_spinText">
             <property name="text">
              <string>Weeks ( x months)</string>
             </property>

@@ -1,3 +1,6 @@
+#ifndef POWERBALLPREFERENCES_H
+#define POWERBALLPREFERENCES_H
+
 // MIT License
 //
 // Copyright (c) 2018 Michael Simpson
@@ -20,19 +23,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "PowerBallWindow.h"
-#include <QApplication>
+#include <QtGlobal>
 
-int main(int argc, char *argv[])
+class PowerBallPreferences
 {
-	QApplication a(argc, argv);
+public:
+	PowerBallPreferences();
 
-	a.setApplicationName("QtPowerBall");
-	a.setOrganizationName("Simpson");
-	a.setOrganizationDomain("");
+	bool preferencesAreDirty(void);
+	bool pickNumbersThatExceedProbability(void);
+	bool limitPicksToTimeSpan(void);
+	quint32 timeSpanInWeeks(void);
+};
 
-	PowerBallWindow w;
-	w.show();
-
-	return a.exec();
-}
+#endif // POWERBALLPREFERENCES_H
