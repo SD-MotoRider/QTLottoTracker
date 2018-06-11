@@ -25,10 +25,10 @@
 
 #include <QtGlobal>
 
-class PowerBallPreferences
+class PowerballPreferences
 {
 public:
-	PowerBallPreferences();
+	PowerballPreferences();
 
 	bool preferencesAreDirty(void);
 	bool pickNumbersThatExceedProbability(void);

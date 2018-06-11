@@ -20,12 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "PowerBallTracker.h"
+#include "PowerballTracker.h"
 
-#include "PowerBallPreferences.h"
+#include "PowerballPreferences.h"
 
+// Qt
 #include <QRandomGenerator>
 #include <QSet>
+
+// C++
+#include <algorithm>    // std::shuffle
+#include <random>       // std::default_random_engine
+#include <chrono>       // std::chrono::system_clock
 
 const int kDrawNumber(0);
 const int kDrawDate(1);
@@ -37,43 +43,85 @@ const int kBall5(6);
 const int kPowerBall(7);
 const int kLastColumn(8);
 
-PowerBallTracker::PowerBallTracker()
+const int kBallCount(69);
+const int kPowerBallCount(36);
+
+PowerballTracker::PowerballTracker()
 {
 
 }
 
-void PowerBallTracker::addDraw
+void PowerballTracker::addDraw
 (
 	const Draw& draw
 )
 {
 	_draws.push_back(draw);
+}
 
-	if (_powerballs.find(draw._powerball) == _powerballs.end())
-		_powerballs[draw._powerball] = 1;
-	else
-		_powerballs[draw._powerball] = _powerballs[draw._powerball] + 1;
+void PowerballTracker::updateFrequencyData()
+{
+	Draws::iterator draw;
+	Draws::iterator drawEnd;
 
-	auto number = draw._numbers.begin();
-	while (number != draw._numbers.end())
+	_powerballs.clear();
+	_numbers.clear();
+
+	if (_spannedDraws.isEmpty() == false)
 	{
-		if (_numbers.find(*number) == _numbers.end())
-			_numbers[*number] = 1;
-		else
-			_numbers[*number] = _numbers[*number] + 1;
+		draw = _spannedDraws.begin();
+		drawEnd = _spannedDraws.end();
+	}
+	else
+	{
+		draw = _draws.begin();
+		draw = _draws.end();
+	}
 
-		number++;
+	while (draw != drawEnd)
+	{
+		int powerball = draw->_powerball;
+		if (_powerballs.find(powerball) == _powerballs.end())
+			_powerballs[powerball] = 1;
+		else
+			_powerballs[powerball] = _powerballs[powerball] + 1;
+
+		auto number = draw->_numbers.begin();
+		while (number != draw->_numbers.end())
+		{
+			int numberValue = *number;
+			if (_numbers.find(numberValue) == _numbers.end())
+				_numbers[numberValue] = 1;
+			else
+				_numbers[numberValue] = _numbers[*number] + 1;
+
+			number++;
+		}
+
+		draw++;
+	}
+
+	_numberProbability.clear();
+	for (int i = 1; i <= kBallCount; i++)
+	{
+		_numberProbability[i] = ((qreal) _numbers[i] / (qreal) _spannedDraws.count()) * 100.0;
+	}
+
+	_powerballProbability.clear();
+	for (int i = 1; i <= kPowerBallCount; i++)
+	{
+		_powerballProbability[i] = ((qreal) _powerballs[i] / (qreal) _spannedDraws.count()) * 100.0;
 	}
 }
 
-void PowerBallTracker::updateModel()
+void PowerballTracker::updateModel()
 {
 	beginInsertRows(index(0, 0), 0, _draws.count());
 	insertRows(0, _draws.count());
 	endInsertRows();
 }
 
-bool PowerBallTracker::getDraw
+bool PowerballTracker::getDraw
 (
 	int index,
 	Draw& draw
@@ -90,7 +138,12 @@ bool PowerBallTracker::getDraw
 	return result;
 }
 
-void PowerBallTracker::getDrawFrequencyChart
+qreal PowerballTracker::getDrawExpectedProbability()
+{
+	return  (5.0 / (qreal) kBallCount) * 100.0;
+}
+
+void PowerballTracker::getDrawFrequencyChart
 (
 	FrequencyCounts& frequencyCounts
 )
@@ -111,7 +164,12 @@ void PowerBallTracker::getDrawFrequencyChart
 	});
 }
 
-void PowerBallTracker::getPowerballFrequencyChart
+qreal PowerballTracker::getPowerballExpectedProbability()
+{
+	return (1.0 / (qreal) kPowerBallCount) * 100.0;
+}
+
+void PowerballTracker::getPowerballFrequencyChart
 (
 	FrequencyCounts& frequencyCounts
 )
@@ -132,11 +190,7 @@ void PowerBallTracker::getPowerballFrequencyChart
 	});
 }
 
-#include <algorithm>    // std::shuffle
-#include <random>       // std::default_random_engine
-#include <chrono>       // std::chrono::system_clock
-
-void PowerBallTracker::generateADraw(Draw& draw)
+void PowerballTracker::generateADraw(Draw& draw)
 {
 	static QVector<int> balls;
 	static QVector<int> powerballs;
@@ -145,35 +199,66 @@ void PowerBallTracker::generateADraw(Draw& draw)
 	{
 		balls.clear();
 		powerballs.clear();
+
+		generateSpannedDraws();
+		updateFrequencyData();
 	}
 
 	bool limitProbability = _preferences.pickNumbersThatExceedProbability();
+
 	if (balls.isEmpty())
 	{
+		qreal expectedProbability = getDrawExpectedProbability();
+
 		unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 
 		auto number = _numbers.begin();
 		while (number != _numbers.end())
 		{
 			for (int i = 0; i < number->second; i++)
-				balls.push_back(number->first);
+			{
+				if (limitProbability == true)
+				{
+					if (_numberProbability[number->first] >= expectedProbability)
+					{
+						balls.push_back(number->first);
+					}
+				}
+				else
+				{
+					balls.push_back(number->first);
+				}
+			}
 
 			number++;
 		}
-
 
 		shuffle (balls.begin(), balls.end(), std::default_random_engine(seed));
 	}
 
 	if (powerballs.isEmpty())
 	{
+		qreal expectedProbability = getPowerballExpectedProbability();
+
 		unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 
 		auto number = _powerballs.begin();
 		while (number != _powerballs.end())
 		{
 			for (int i = 0; i < number->second; i++)
-				powerballs.push_back(number->first);
+			{
+				if (limitProbability == true)
+				{
+					if (_powerballProbability[number->first] >= expectedProbability)
+					{
+						powerballs.push_back(number->first);
+					}
+				}
+				else
+				{
+					powerballs.push_back(number->first);
+				}
+			}
 
 			number++;
 		}
@@ -197,7 +282,40 @@ void PowerBallTracker::generateADraw(Draw& draw)
 	draw._powerball = powerballs.at(QRandomGenerator::system()->bounded(powerballs.count()));
 }
 
-int PowerBallTracker::rowCount
+void PowerballTracker::generateSpannedDraws()
+{
+	static quint32 lastSpan(0);
+
+	if (_preferences.limitPicksToTimeSpan())
+	{
+		if (lastSpan != _preferences.timeSpanInWeeks())
+		{
+			lastSpan = _preferences.timeSpanInWeeks();
+
+			QDate spanDate = QDate::currentDate();
+			spanDate = spanDate.addDays(-1 * (lastSpan * 7));
+
+			_spannedDraws.clear();
+
+			auto draw = _draws.begin();
+			while (draw != _draws.end())
+			{
+				if (draw->_drawDate > spanDate)
+				{
+					_spannedDraws.push_back(*draw);
+				}
+
+				draw++;
+			}
+		}
+	}
+	else
+	{
+		_spannedDraws.clear();
+	}
+}
+
+int PowerballTracker::rowCount
 (
 	const QModelIndex& parent //= QModelIndex()
 ) const
@@ -207,7 +325,7 @@ int PowerBallTracker::rowCount
 	return _draws.count();
 }
 
-int PowerBallTracker::columnCount
+int PowerballTracker::columnCount
 (
 	const QModelIndex& parent // = QModelIndex()
 ) const
@@ -218,7 +336,7 @@ int PowerBallTracker::columnCount
 }
 
 
-QVariant PowerBallTracker::data
+QVariant PowerballTracker::data
 (
 	const QModelIndex& index,
 	int role //= Qt::DisplayRole
@@ -249,7 +367,7 @@ QVariant PowerBallTracker::data
 	return QVariant();
 }
 
-QVariant PowerBallTracker::headerData
+QVariant PowerballTracker::headerData
 (
 	int section,
 	Qt::Orientation orientation,

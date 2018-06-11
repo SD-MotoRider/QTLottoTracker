@@ -53,7 +53,7 @@ void LottoWidget::on__genQuickPick_released()
 	Draws draws;
 	Draw draw;
 
-	PowerBallTracker* tracker = &(_drawReader._tracker);
+	PowerballTracker* tracker = &(_drawReader._tracker);
 
 	tracker->generateADraw(draw);
 	draws.push_back(draw);
@@ -96,7 +96,7 @@ void LottoWidget::on__genQuickPick_released()
 void LottoWidget::on_drawDataFinished()
 {
 
-	PowerBallTracker* tracker = &(_drawReader._tracker);
+	PowerballTracker* tracker = &(_drawReader._tracker);
 
 	//tracker->updateModel();
 
@@ -149,18 +149,17 @@ void LottoWidget::on_drawDataFinished()
 	}
 
 	_drawCount->setText(QString::number(drawCount));
+
+	qreal totalProbability;
+
 	FrequencyCounts frequencyCounts;
 
 	tracker->getDrawFrequencyChart(frequencyCounts);
 
 	_ballFreqTable->clearContents();
-    _ballFreqTable->setRowCount((int) frequencyCounts.size());
+	_ballFreqTable->setRowCount((int) frequencyCounts.size());
 
-	qreal totalProbability(0);
-
-	totalProbability = 5.0 / (qreal) frequencyCounts.size() * 100.0;
-
-	_numberProbability->setText(QString::number(totalProbability, 'f', precision) + "%");
+	_numberProbability->setText(QString::number(tracker->getDrawExpectedProbability(), 'f', precision) + "%");
 
 	row = 0;
 
@@ -186,13 +185,9 @@ void LottoWidget::on_drawDataFinished()
 	row = 0;
 
 	_pBallFreqTable->clearContents();
-    _pBallFreqTable->setRowCount((int) frequencyCounts.size());
+	_pBallFreqTable->setRowCount((int) frequencyCounts.size());
 
-	totalProbability = 0;
-
-	totalProbability = (1.0 / (qreal) frequencyCounts.size()) * 100.0;
-
-	_pBallProbability->setText(QString::number(totalProbability, 'f', precision) + "%");
+	_pBallProbability->setText(QString::number(tracker->getPowerballExpectedProbability(), 'f', precision) + "%");
 
 	frequencyCount = frequencyCounts.begin();
 	while (frequencyCount != frequencyCounts.end())

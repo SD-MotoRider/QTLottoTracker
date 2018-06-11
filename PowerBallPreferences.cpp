@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "PowerBallPreferences.h"
+#include "PowerballPreferences.h"
 
 #include <QSettings>
 
@@ -29,14 +29,14 @@ const QString kExceedsProbability("ExceedsProbability");
 const QString kLimitToTimeSpan("LimitToTimeSpane");
 const QString kTimeSpamLimit("LimitInWeeks");
 
-PowerBallPreferences::PowerBallPreferences()
+PowerballPreferences::PowerballPreferences()
 {
 	_exceedProb = pickNumbersThatExceedProbability();
 	_limitPicks =limitPicksToTimeSpan();
 	_limitSpan = timeSpanInWeeks();
 }
 
-bool PowerBallPreferences::preferencesAreDirty()
+bool PowerballPreferences::preferencesAreDirty()
 {
 	bool result(true);
 
@@ -68,7 +68,7 @@ bool PowerBallPreferences::preferencesAreDirty()
 	return result;
 }
 
-bool PowerBallPreferences::pickNumbersThatExceedProbability()
+bool PowerballPreferences::pickNumbersThatExceedProbability()
 {
 	bool result;
 
@@ -82,7 +82,7 @@ bool PowerBallPreferences::pickNumbersThatExceedProbability()
 	return result;
 }
 
-bool PowerBallPreferences::limitPicksToTimeSpan()
+bool PowerballPreferences::limitPicksToTimeSpan()
 {
 	bool result;
 
@@ -96,7 +96,7 @@ bool PowerBallPreferences::limitPicksToTimeSpan()
 	return result;
 }
 
-quint32 PowerBallPreferences::timeSpanInWeeks()
+quint32 PowerballPreferences::timeSpanInWeeks()
 {
 	quint32 result;
 

@@ -1,5 +1,5 @@
-#ifndef POWERBALLTRACKER_H
-#define POWERBALLTRACKER_H
+#ifndef powerballTRACKER_H
+#define powerballTRACKER_H
 
 // MIT License
 //
@@ -24,7 +24,7 @@
 // SOFTWARE.
 
 #include "Draw.h"
-#include "PowerBallPreferences.h"
+#include "PowerballPreferences.h"
 
 // Qt
 #include <QAbstractTableModel>
@@ -37,12 +37,13 @@
 typedef std::map<int, int> DrawNumberCounts;
 typedef std::pair<int, int> FrequencyPair;
 typedef std::vector<FrequencyPair> FrequencyCounts;
+typedef std::map<int, qreal> Probability;
 
-class PowerBallTracker :
+class PowerballTracker :
 	public QAbstractTableModel
 {
 public:
-	PowerBallTracker();
+	PowerballTracker();
 
 	void reset(void)
 	{
@@ -60,7 +61,12 @@ public:
 
 	bool getDraw(int index, Draw& draw);
 
+	qreal getDrawExpectedProbability(void);
+	qreal getDrawProbability(int ballNumber);
 	void getDrawFrequencyChart(FrequencyCounts& frequencyCounts);
+
+	qreal getPowerballExpectedProbability(void);
+	qreal getPowerballProbability(int ballNumber);
 	void getPowerballFrequencyChart(FrequencyCounts& frequencyCounts);
 
 	void generateADraw(Draw& draw);
@@ -73,10 +79,16 @@ public:
 	virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
 private:
-	PowerBallPreferences			_preferences;
+	void generateSpannedDraws(void);
+	void updateFrequencyData(void);
+
+	PowerballPreferences			_preferences;
 	Draws							_draws;
+	Draws							_spannedDraws;
 	DrawNumberCounts				_powerballs;
 	DrawNumberCounts				_numbers;
+	Probability						_numberProbability;
+	Probability						_powerballProbability;
 };
 
 #endif // LOTTOTRACKER_H

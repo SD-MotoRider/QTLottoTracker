@@ -23,7 +23,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "PowerBallTracker.h"
+#include "PowerballTracker.h"
 
 #include <QList>
 #include <QObject>
@@ -52,7 +52,7 @@ public:
 	virtual SourceType sourceType(void);
 	virtual bool update(void);
 
-	PowerBallTracker _tracker;
+	PowerballTracker _tracker;
 
 signals:
 	void drawFinished(void);

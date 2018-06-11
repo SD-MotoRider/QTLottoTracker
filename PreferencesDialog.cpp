@@ -1,6 +1,6 @@
 #include "PreferencesDialog.h"
 
-#include "PowerBallPreferences.h"
+#include "PowerballPreferences.h"
 
 PreferencesDialog::PreferencesDialog
 (
@@ -10,7 +10,7 @@ PreferencesDialog::PreferencesDialog
 {
 	setupUi(this);
 
-	PowerBallPreferences powerBallPreferece;
+	PowerballPreferences powerBallPreferece;
 
 	_limitToAboveExpected->setChecked(powerBallPreferece.pickNumbersThatExceedProbability());
 	bool limitToTimeSpan = powerBallPreferece.limitPicksToTimeSpan();

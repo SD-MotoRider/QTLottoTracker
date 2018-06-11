@@ -1,4 +1,4 @@
-#include "PowerBallWindow.h"
+#include "PowerballWindow.h"
 
 #include "PreferencesDialog.h"
 
