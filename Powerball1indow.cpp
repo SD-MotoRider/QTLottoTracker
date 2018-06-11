@@ -1,4 +1,4 @@
-#include "PowerBallWindow.h"
+#include "PowerballWindow.h"
 
 #include "PreferencesDialog.h"
 
@@ -40,6 +40,5 @@ void PowerBallWindow::on_actionPreferences_triggered
 
 	if (preferencesDialog.exec() == QDialog::Accepted)
 	{
-
 	}
 }

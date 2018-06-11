@@ -20,20 +20,22 @@ CONFIG += c++11
 SOURCES += \
 	main.cpp \
 	PowerballReader.cpp \
-	PowerBallTracker.cpp \
 	QuickPickDialog.cpp \
     PreferencesDialog.cpp \
     LottoWidget.cpp \
-    PowerBallWindow.cpp
+    PowerballPreferences.cpp \
+    PowerballTracker.cpp \
+    PowerballWindow.cpp
 
 HEADERS  += \
 	Draw.h \
 	PowerballReader.h \
-	PowerBallTracker.h \
 	QuickPickDialog.h \
     PreferencesDialog.h \
     LottoWidget.h \
-    PowerBallWindow.h
+    PowerballTracker.h \
+    PowerballWindow.h \
+    PowerballPreferences.h
 
 FORMS    += \
 	QuickPickDialog.ui \
