@@ -13,6 +13,8 @@ QT += printsupport
 TARGET = PowerBall
 TEMPLATE = app
 
+RC_FILE = QtPowerBall.rc
+
 CONFIG += c++11
 
 SOURCES += \
