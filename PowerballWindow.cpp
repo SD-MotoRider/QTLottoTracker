@@ -40,5 +40,10 @@ void PowerBallWindow::on_actionPreferences_triggered
 
 	if (preferencesDialog.exec() == QDialog::Accepted)
 	{
+		LottoWidget* lottoWidget = qobject_cast<LottoWidget*>(centralWidget());
+		if (lottoWidget != Q_NULLPTR)
+		{
+			lottoWidget->preferencesUpdated();
+		}
 	}
 }

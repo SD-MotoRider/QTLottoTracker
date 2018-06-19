@@ -24,7 +24,6 @@
 // SOFTWARE.
 
 #include "Draw.h"
-#include "PowerballPreferences.h"
 
 // Qt
 #include <QAbstractTableModel>
@@ -47,9 +46,15 @@ public:
 
 	void reset(void)
 	{
-		_draws.clear();
-		_powerballs.clear();
-		_numbers.clear();
+		_spannedDraws.clear();
+		_powerballCounts.clear();
+		_ballCounts.clear();
+		_powerballProbability.clear();
+		_ballProbability.clear();
+		_qdPowerballs.clear();
+		_qdBalls.clear();
+
+		generateSpannedDraws();
 	}
 
 	void addDraw(const Draw& draw);
@@ -79,16 +84,18 @@ public:
 	virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
 private:
-	void generateSpannedDraws(void);
-	void updateFrequencyData(void);
+	void generateSpannedDraws(void);						// Called when the preferences change
 
-	PowerballPreferences			_preferences;
-	Draws							_draws;
-	Draws							_spannedDraws;
-	DrawNumberCounts				_powerballs;
-	DrawNumberCounts				_numbers;
-	Probability						_numberProbability;
-	Probability						_powerballProbability;
+	Draws							_draws;					// all available data
+	Draws							_spannedDraws;			// data limited to preferences
+
+	DrawNumberCounts				_powerballCounts;		// Powerball frequency chart for spanned data
+	DrawNumberCounts				_ballCounts;			// Ball frequency chart for spanned data
+	Probability						_powerballProbability;	// Actual pb probability results from spanned data
+	Probability						_ballProbability;		// Actual ball probability results from spanned data
+
+	QVector<int>					_qdPowerballs;			// Powerball quick draw data built from spanned data
+	QVector<int>					_qdBalls;				// Ball quick draw data built from spanned data
 };
 
 #endif // LOTTOTRACKER_H

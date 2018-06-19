@@ -39,6 +39,8 @@ public:
 	explicit LottoWidget(QWidget* parent = Q_NULLPTR);
 	~LottoWidget();
 
+	void preferencesUpdated(void);
+
 public slots:
 	void on__genQuickPick_released();
 	void on__updateDrawData_released();

@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 #include "PowerballTracker.h"
-
 #include "PowerballPreferences.h"
 
 // Qt
@@ -59,60 +58,6 @@ void PowerballTracker::addDraw
 	_draws.push_back(draw);
 }
 
-void PowerballTracker::updateFrequencyData()
-{
-	Draws::iterator draw;
-	Draws::iterator drawEnd;
-
-	_powerballs.clear();
-	_numbers.clear();
-
-	if (_spannedDraws.isEmpty() == false)
-	{
-		draw = _spannedDraws.begin();
-		drawEnd = _spannedDraws.end();
-	}
-	else
-	{
-		draw = _draws.begin();
-		draw = _draws.end();
-	}
-
-	while (draw != drawEnd)
-	{
-		int powerball = draw->_powerball;
-		if (_powerballs.find(powerball) == _powerballs.end())
-			_powerballs[powerball] = 1;
-		else
-			_powerballs[powerball] = _powerballs[powerball] + 1;
-
-		auto number = draw->_numbers.begin();
-		while (number != draw->_numbers.end())
-		{
-			int numberValue = *number;
-			if (_numbers.find(numberValue) == _numbers.end())
-				_numbers[numberValue] = 1;
-			else
-				_numbers[numberValue] = _numbers[*number] + 1;
-
-			number++;
-		}
-
-		draw++;
-	}
-
-	_numberProbability.clear();
-	for (int i = 1; i <= kBallCount; i++)
-	{
-		_numberProbability[i] = ((qreal) _numbers[i] / (qreal) _spannedDraws.count()) * 100.0;
-	}
-
-	_powerballProbability.clear();
-	for (int i = 1; i <= kPowerBallCount; i++)
-	{
-		_powerballProbability[i] = ((qreal) _powerballs[i] / (qreal) _spannedDraws.count()) * 100.0;
-	}
-}
 
 void PowerballTracker::updateModel()
 {
@@ -150,8 +95,8 @@ void PowerballTracker::getDrawFrequencyChart
 {
 	frequencyCounts.clear();
 
-	auto number = _numbers.begin();
-	while (number != _numbers.end())
+	auto number = _ballCounts.begin();
+	while (number != _ballCounts.end())
 	{
 		FrequencyPair frequencyPair(number->first, number->second);
 		frequencyCounts.push_back(frequencyPair);
@@ -176,8 +121,8 @@ void PowerballTracker::getPowerballFrequencyChart
 {
 	frequencyCounts.clear();
 
-	auto number = _powerballs.begin();
-	while (number != _powerballs.end())
+	auto number = _powerballCounts.begin();
+	while (number != _powerballCounts.end())
 	{
 		FrequencyPair frequencyPair(number->first, number->second);
 		frequencyCounts.push_back(frequencyPair);
@@ -190,87 +135,20 @@ void PowerballTracker::getPowerballFrequencyChart
 	});
 }
 
-void PowerballTracker::generateADraw(Draw& draw)
+void PowerballTracker::generateADraw
+(
+	Draw& draw
+)
 {
-	static QVector<int> balls;
-	static QVector<int> powerballs;
-
-	if (_preferences.preferencesAreDirty() == true)
-	{
-		balls.clear();
-		powerballs.clear();
-
-		generateSpannedDraws();
-		updateFrequencyData();
-	}
-
-	bool limitProbability = _preferences.pickNumbersThatExceedProbability();
-
-	if (balls.isEmpty())
-	{
-		qreal expectedProbability = getDrawExpectedProbability();
-
-		unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-
-		auto number = _numbers.begin();
-		while (number != _numbers.end())
-		{
-			for (int i = 0; i < number->second; i++)
-			{
-				if (limitProbability == true)
-				{
-					if (_numberProbability[number->first] >= expectedProbability)
-					{
-						balls.push_back(number->first);
-					}
-				}
-				else
-				{
-					balls.push_back(number->first);
-				}
-			}
-
-			number++;
-		}
-
-		shuffle (balls.begin(), balls.end(), std::default_random_engine(seed));
-	}
-
-	if (powerballs.isEmpty())
-	{
-		qreal expectedProbability = getPowerballExpectedProbability();
-
-		unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-
-		auto number = _powerballs.begin();
-		while (number != _powerballs.end())
-		{
-			for (int i = 0; i < number->second; i++)
-			{
-				if (limitProbability == true)
-				{
-					if (_powerballProbability[number->first] >= expectedProbability)
-					{
-						powerballs.push_back(number->first);
-					}
-				}
-				else
-				{
-					powerballs.push_back(number->first);
-				}
-			}
-
-			number++;
-		}
-
-		shuffle (powerballs.begin(), powerballs.end(), std::default_random_engine(seed));
-	}
+	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+	shuffle(_qdBalls.begin(), _qdBalls.end(), std::default_random_engine(seed));
+	shuffle (_qdPowerballs.begin(), _qdPowerballs.end(), std::default_random_engine(seed));
 
 	QSet<int> ballSet;
 
 	while (ballSet.count() < 5)
 	{
-		int ball = balls.at(QRandomGenerator::system()->bounded(balls.count()));
+		int ball = _qdBalls.at(QRandomGenerator::system()->bounded(_qdBalls.count()));
 		if (ballSet.contains(ball) == false)
 			ballSet.insert(ball);
 	}
@@ -279,39 +157,118 @@ void PowerballTracker::generateADraw(Draw& draw)
 	draw._drawNumber = 0;
 	draw._numbers = ballSet.toList().toVector();
 	std::sort(draw._numbers.begin() , draw._numbers.end());
-	draw._powerball = powerballs.at(QRandomGenerator::system()->bounded(powerballs.count()));
+	draw._powerball = _qdPowerballs.at(QRandomGenerator::system()->bounded(_qdPowerballs.count()));
 }
 
 void PowerballTracker::generateSpannedDraws()
 {
-	static quint32 lastSpan(0);
+	PowerballPreferences preferences;
 
-	if (_preferences.limitPicksToTimeSpan())
+	bool limitToTimeSpan(preferences.limitPicksToTimeSpan());
+	bool limitProbability = preferences.pickNumbersThatExceedProbability();
+	qreal expectedBallProbability = getDrawExpectedProbability();
+	qreal pbExpectedProbability = getPowerballExpectedProbability();
+	int spanDays = preferences.timeSpanInWeeks();
+
+	reset();
+
+	Draws::iterator draw;
+
+	if (limitToTimeSpan) // builds the spanned data to date
 	{
-		if (lastSpan != _preferences.timeSpanInWeeks())
+		QDate spanDate = QDate::currentDate();
+		spanDate = spanDate.addDays(-1 * (spanDays * 7));
+
+		draw = _draws.begin();
+		while (draw != _draws.end())
 		{
-			lastSpan = _preferences.timeSpanInWeeks();
+			if (draw->_drawDate >= spanDate)
+				_spannedDraws.push_back(*draw);
 
-			QDate spanDate = QDate::currentDate();
-			spanDate = spanDate.addDays(-1 * (lastSpan * 7));
-
-			_spannedDraws.clear();
-
-			auto draw = _draws.begin();
-			while (draw != _draws.end())
-			{
-				if (draw->_drawDate > spanDate)
-				{
-					_spannedDraws.push_back(*draw);
-				}
-
-				draw++;
-			}
+			draw++;
 		}
 	}
 	else
 	{
-		_spannedDraws.clear();
+		_spannedDraws = _draws;
+	}
+
+	// Initialize count data
+	int index;
+
+	for (index = 1; index <= kBallCount; index++)
+		_ballCounts[index] = 0;
+
+	for (index = 1; index <= kPowerBallCount; index++)
+		_powerballCounts[index] = 0;
+
+	// populate the count data
+	draw = _spannedDraws.begin();
+	while (draw != _spannedDraws.end())
+	{
+		int powerball = draw->_powerball;
+
+		_powerballCounts[powerball] = _powerballCounts[powerball] + 1;
+
+		auto number = draw->_numbers.begin();
+		while (number != draw->_numbers.end())
+		{
+			int numberValue = *number;
+			_ballCounts[numberValue] = _ballCounts[*number] + 1;
+
+			number++;
+		}
+
+		draw++;
+	}
+
+	// generate the probability tables
+	if (_spannedDraws.count() != 0)
+	{
+		for (int i = 1; i <= kBallCount; i++)
+			_ballProbability[i] = ((qreal) _ballCounts[i] / (qreal) _spannedDraws.count()) * 100.0;
+
+		for (int i = 1; i <= kPowerBallCount; i++)
+			_powerballProbability[i] = ((qreal) _powerballCounts[i] / (qreal) _spannedDraws.count()) * 100.0;
+	}
+
+	auto ballCount = _ballCounts.begin();
+	while (ballCount != _ballCounts.end())
+	{
+		for (int i = 0; i < ballCount->second; i++)
+		{
+			if (limitProbability == true)
+			{
+				if (_ballProbability[ballCount->first] >= expectedBallProbability)
+					_qdBalls.push_back(ballCount->first);
+			}
+			else
+			{
+				_qdBalls.push_back(ballCount->first);
+			}
+		}
+
+		ballCount++;
+	}
+
+
+	auto powerBall = _powerballCounts.begin();
+	while (powerBall != _powerballCounts.end())
+	{
+		for (int i = 0; i < powerBall->second; i++)
+		{
+			if (limitProbability == true)
+			{
+				if (_powerballProbability[powerBall->first] >= pbExpectedProbability)
+					_qdPowerballs.push_back(powerBall->first);
+			}
+			else
+			{
+				_qdPowerballs.push_back(powerBall->first);
+			}
+		}
+
+		powerBall++;
 	}
 }
 

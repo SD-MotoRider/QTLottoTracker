@@ -90,7 +90,13 @@ void LottoWidget::on__genQuickPick_released()
 	quickPickDialog.addDraws(draws);
 
 	quickPickDialog.exec();
+}
 
+void LottoWidget::preferencesUpdated()
+{
+	PowerballTracker* tracker = &(_drawReader._tracker);
+	tracker->reset();
+	on_drawDataFinished();
 }
 
 void LottoWidget::on_drawDataFinished()

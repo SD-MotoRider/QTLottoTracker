@@ -13,14 +13,14 @@ QT += printsupport
 TARGET = PowerBall
 TEMPLATE = app
 
-RC_FILE = QtPowerBall.rc
+RC_FILE = QtPowerball.rc
 
 CONFIG += c++11
 
 SOURCES += \
-	main.cpp \
-	PowerballReader.cpp \
-	QuickPickDialog.cpp \
+    main.cpp \
+    PowerballReader.cpp \
+    QuickPickDialog.cpp \
     PreferencesDialog.cpp \
     LottoWidget.cpp \
     PowerballPreferences.cpp \
@@ -28,22 +28,24 @@ SOURCES += \
     PowerballWindow.cpp
 
 HEADERS  += \
-	Draw.h \
-	PowerballReader.h \
-	QuickPickDialog.h \
+    Draw.h \
+    PowerballReader.h \
+    QuickPickDialog.h \
     PreferencesDialog.h \
     LottoWidget.h \
     PowerballTracker.h \
     PowerballWindow.h \
-    PowerballPreferences.h
+    PowerballPreferences.h \
+    resource.h
 
 FORMS    += \
-	QuickPickDialog.ui \
+    QuickPickDialog.ui \
     PreferencesDialog.ui \
     LottoWidget.ui \
-    PowerBallWindow.ui
+    PowerballWindow.ui
 
 DISTFILES += \
-	README.md \
-	.gitignore \
-	LICENSE
+    README.md \
+    .gitignore \
+    LICENSE \
+    QtPowerball.ico
